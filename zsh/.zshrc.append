@@ -1,0 +1,14 @@
+# tmux
+t() {
+  if tmux ls >/dev/null 2>&1; then
+    tmux attach 2>/dev/null || tmux choose-session
+  else
+    tmux new
+  fi
+}
+alias tn='tmux new'            # (Optional) use -s <name>
+alias ta='tmux attach'         # use -t <name>
+alias tl='tmux list-sessions'
+alias tc='tmux choose-session'
+alias tk='tmux kill-session'   # use -t <name>
+alias tK='tmux kill-server'
