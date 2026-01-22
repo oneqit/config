@@ -25,8 +25,10 @@ pkg install tmux
 tmux 설정 파일을 심볼릭 링크로 연결합니다.
 
 ```bash
-cd tmux
+# Run from the tmux directory
 ln -sf $PWD/.tmux.conf ~/.tmux.conf
+cat .zshrc.append >> ~/.zshrc
+source ~/.zshrc
 ```
 
 ## 주요 키 바인딩
