@@ -25,7 +25,8 @@ pkg install tmux
 tmux 설정 파일을 심볼릭 링크로 연결합니다.
 
 ```bash
-ln -sf ~/code/oneqit/config/tmux/.tmux.conf ~/.tmux.conf
+cd tmux
+ln -sf $PWD/.tmux.conf ~/.tmux.conf
 ```
 
 ## 주요 키 바인딩
