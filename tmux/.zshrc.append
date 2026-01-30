@@ -14,7 +14,7 @@ tcode() {
   local cmd2="${2:-claude}"
   t tmux new-session \; \
     send-keys "$cmd1" C-m \; \
-    split-window -h -l 33% \; \
+    split-window -h -l 40% \; \
     send-keys "$cmd2" C-m \; \
     select-pane -L
 }
