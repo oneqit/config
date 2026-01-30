@@ -6,8 +6,17 @@ t() {
   if tmux ls >/dev/null 2>&1; then
     tmux attach 2>/dev/null || tmux choose-session
   else
-    tmux new
+    "${@:-tmux new}"
   fi
+}
+tcode() {
+  local cmd1="${1:-nvim}"
+  local cmd2="${2:-claude}"
+  t tmux new-session \; \
+    send-keys "$cmd1" C-m \; \
+    split-window -h -l 33% \; \
+    send-keys "$cmd2" C-m \; \
+    select-pane -L
 }
 alias tn='tmux new'            # (Optional) use -s <name>
 alias ta='tmux attach'         # use -t <name>
