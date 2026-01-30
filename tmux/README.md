@@ -24,7 +24,7 @@ pkg install tmux
 
 ```bash
 ln -sf $PWD/.tmux.conf ~/.tmux.conf
-echo 'source ~/code/oneqit/config/tmux/.zshrc.append' >> ~/.zshrc
+echo "source $PWD/.zshrc.append" >> ~/.zshrc
 exec $SHELL
 ```
 
