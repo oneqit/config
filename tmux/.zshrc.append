@@ -1,26 +1,24 @@
 
 # tmux
-t() {
+_tmux_env() {
   export LANG=ko_KR.UTF-8
   export LC_ALL=ko_KR.UTF-8
-  if tmux ls >/dev/null 2>&1; then
-    tmux attach 2>/dev/null || tmux choose-session
-  else
-    "${@:-tmux new}"
-  fi
 }
+
+t()  { _tmux_env; tmux new "$@"; }              # (Optional) use -s <name>
+ta() { _tmux_env; tmux attach "$@"; }          # use -t <name>
+tl() { _tmux_env; tmux list-sessions "$@"; }
+tc() { _tmux_env; tmux choose-session "$@"; }
+tk() { _tmux_env; tmux kill-session "$@"; }   # use -t <name>
+tK() { _tmux_env; tmux kill-server "$@"; }
+
 tcode() {
+  _tmux_env
   local cmd1="${1:-nvim}"
   local cmd2="${2:-claude}"
-  t tmux new-session \; \
+  tmux new-session \; \
     send-keys "$cmd1" C-m \; \
     split-window -h -l 40% \; \
     send-keys "$cmd2" C-m \; \
     select-pane -L
 }
-alias tn='tmux new'            # (Optional) use -s <name>
-alias ta='tmux attach'         # use -t <name>
-alias tl='tmux list-sessions'
-alias tc='tmux choose-session'
-alias tk='tmux kill-session'   # use -t <name>
-alias tK='tmux kill-server'
