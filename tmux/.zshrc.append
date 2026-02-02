@@ -12,7 +12,7 @@ tc() { _tmux_env; tmux choose-session "$@"; }
 tk() { _tmux_env; tmux kill-session "$@"; }   # use -t <name>
 tK() { _tmux_env; tmux kill-server "$@"; }
 
-tcode() {
+qode() {
   _tmux_env
   local cmd1="${1:-nvim}"
   local cmd2="${2:-claude}"

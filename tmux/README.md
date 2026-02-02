@@ -33,8 +33,8 @@ exec $SHELL
 | 명령어 | 설명 |
 |---|---|
 | `t` | tmux 시작 (세션 있으면 attach, 없으면 new) |
-| `tcode` | 2:1 분할 + nvim/claude 실행 (좌측 포커스) |
-| `tcode vim htop` | 2:1 분할 + 커스텀 명령어 실행 |
+| `qode` | 2:1 분할 + nvim/claude 실행 (좌측 포커스) |
+| `qode vim htop` | 2:1 분할 + 커스텀 명령어 실행 |
 | `tn` | 새 세션 (`-s <name>`) |
 | `ta` | 세션 attach (`-t <name>`) |
 | `tl` | 세션 목록 |
