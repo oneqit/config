@@ -16,9 +16,18 @@ tcode() {
   _tmux_env
   local cmd1="${1:-nvim}"
   local cmd2="${2:-claude}"
-  tmux new-session \; \
-    send-keys "$cmd1" C-m \; \
-    split-window -h -l 40% \; \
-    send-keys "$cmd2" C-m \; \
-    select-pane -L
+  if [[ -n "$TMUX" ]]; then
+    # Already inside tmux: split current window
+    tmux split-window -h -l 40% \; \
+      send-keys "$cmd2" C-m \; \
+      select-pane -L \; \
+      send-keys "$cmd1" C-m
+  else
+    # Outside tmux: create new session
+    tmux new-session \; \
+      send-keys "$cmd1" C-m \; \
+      split-window -h -l 40% \; \
+      send-keys "$cmd2" C-m \; \
+      select-pane -L
+  fi
 }
