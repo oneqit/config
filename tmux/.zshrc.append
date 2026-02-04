@@ -8,7 +8,7 @@ _tmux_env() {
 t()  { _tmux_env; tmux new "$@"; }              # (Optional) use -s <name>
 ta() { _tmux_env; tmux attach "$@"; }          # use -t <name>
 tl() { _tmux_env; tmux list-sessions "$@"; }
-tc() { _tmux_env; tmux choose-session "$@"; }
+tc() { _tmux_env; tmux choose-session "$@"; }  # run inside tmux
 tk() { _tmux_env; tmux kill-session "$@"; }   # use -t <name>
 tK() { _tmux_env; tmux kill-server "$@"; }
 
