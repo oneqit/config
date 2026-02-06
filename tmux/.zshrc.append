@@ -12,6 +12,9 @@ tc() { _tmux_env; tmux choose-session "$@"; }  # run inside tmux
 tk() { _tmux_env; tmux kill-session "$@"; }   # use -t <name>
 tK() { _tmux_env; tmux kill-server "$@"; }
 
+# For servers without tmux-256color terminfo (e.g. CentOS 7)
+alias ssh-old='TERM=xterm ssh'
+
 qode() {
   _tmux_env
   local cmd1="${1:-nvim}"
