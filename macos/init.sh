@@ -88,8 +88,8 @@ install_font() {
   if fc-list 2>/dev/null | grep -q "CascadiaMonoNF"; then
     success "Cascadia Mono NF 이미 설치됨"
   else
-    info "Cascadia Code 폰트 설치 중..."
-    brew install --cask font-cascadia-code
+    info "Cascadia Mono NF 폰트 설치 중..."
+    brew install --cask font-cascadia-mono-nf
     success "Cascadia Mono NF 설치 완료"
   fi
 
