@@ -11,6 +11,7 @@ set -euo pipefail
 #    - tmux (세션/분할 관리)
 #    - Oh My Zsh (Zsh 프레임워크)
 #    - Starship (프롬프트)
+#    - 한영 키보드 백틱 설정
 #
 #  사용법:
 #    chmod +x setup.sh
@@ -303,6 +304,30 @@ EOF
 }
 
 # ───────────────────────────────────────────────────────
+#  한영 키보드 백틱(`) 입력 설정
+# ───────────────────────────────────────────────────────
+setup_keybinding() {
+  local keybinding_dir="$HOME/Library/KeyBindings"
+  local keybinding_file="$keybinding_dir/DefaultkeyBinding.dict"
+
+  if [[ -f "$keybinding_file" ]]; then
+    warn "DefaultkeyBinding.dict 이미 존재 → 백업 후 덮어쓰기"
+    cp "$keybinding_file" "${keybinding_file}.backup.$(date +%Y%m%d%H%M%S)"
+  fi
+
+  info "한영 키보드 백틱 설정 중..."
+
+  mkdir -p "$keybinding_dir"
+  cat > "$keybinding_file" << 'EOF'
+{
+    "₩" = ("insertText:", "`");
+}
+EOF
+
+  success "백틱 설정 완료 → $keybinding_file (앱 재시작 후 적용)"
+}
+
+# ───────────────────────────────────────────────────────
 #  메인 실행
 # ───────────────────────────────────────────────────────
 main() {
@@ -320,6 +345,7 @@ main() {
   install_oh_my_zsh
   setup_zshrc
   setup_starship_config
+  setup_keybinding
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
   echo -e "${GREEN}  ✔ 세팅 완료!${NC}"
@@ -330,6 +356,7 @@ main() {
   echo -e "    프롬프트 → Starship"
   echo -e "    플러그인 → Oh My Zsh (git alias, 자동제안, 구문강조)"
   echo -e "    폰트     → Cascadia Mono NF"
+  echo -e "    키보드   → 한영 백틱(\`) 설정"
   echo ""
 }
 
