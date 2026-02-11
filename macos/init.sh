@@ -172,7 +172,7 @@ setup_zshrc() {
     extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3)
   fi
 
-  if [[ -f "$zshrc" ]] && cmp -s "$TEMPLATE_DIR/.zshrc" <(cat "$TEMPLATE_DIR/.zshrc" <(echo "$extras")); then
+  if [[ -f "$zshrc" ]] && cmp -s "$zshrc" <(cat "$TEMPLATE_DIR/.zshrc"; [[ -n "$extras" ]] && echo "$extras"); then
     success ".zshrc 변경 없음 → 스킵"
     return
   fi
