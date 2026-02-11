@@ -49,26 +49,26 @@ style = "bg:color_orange fg:color_fg0"
 [os.symbols]
 Windows = "󰍲"
 Ubuntu = "󰕈"
-SUSE = ""
+SUSE = ""
 Raspbian = "󰐿"
 Mint = "󰣭"
 Macos = "󰀵"
-Manjaro = ""
+Manjaro = ""
 Linux = "󰌽"
 Gentoo = "󰣨"
 Fedora = "󰣛"
-Alpine = ""
-Amazon = ""
-Android = ""
-AOSC = ""
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
 Arch = "󰣇"
 Artix = "󰣇"
-EndeavourOS = ""
-CentOS = ""
+EndeavourOS = ""
+CentOS = ""
 Debian = "󰣚"
 Redhat = "󱄛"
 RedHatEnterprise = "󱄛"
-Pop = ""
+Pop = ""
 
 [username]
 show_always = true
@@ -85,13 +85,13 @@ truncate_to_repo = false
 
 [directory.substitutions]
 "Documents" = "󰈙 "
-"Downloads" = " "
+"Downloads" = " "
 "Music" = "󰝚 "
-"Pictures" = " "
+"Pictures" = " "
 "Developer" = "󰲋 "
 
 [git_branch]
-symbol = ""
+symbol = ""
 style = "bg:color_aqua"
 format = '[[ $symbol $branch ](fg:color_fg0 bg:color_aqua)]($style)'
 
@@ -159,7 +159,7 @@ format = '[[ $symbol $context( \($namespace\)) ](fg:#83a598 bg:color_bg3)]($styl
 disabled = false
 time_format = "%T"
 style = "bg:color_bg1"
-format = '[[  $time ](fg:color_fg0 bg:color_bg1)]($style)'
+format = '[[  $time ](fg:color_fg0 bg:color_bg1)]($style)'
 
 [cmd_duration]
 min_time = 3000
