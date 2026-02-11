@@ -13,10 +13,11 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-info()    { echo -e "${BLUE}[INFO]${NC} $1"; }
-success() { echo -e "${GREEN}[✔]${NC} $1"; }
-warn()    { echo -e "${YELLOW}[!]${NC} $1"; }
-error()   { echo -e "${RED}[✘]${NC} $1"; exit 1; }
+info()    { echo -e "  ${BLUE}[i]${NC} $1"; }
+success() { echo -e "  ${GREEN}[✔]${NC} $1"; }
+warn()    { echo -e "  ${YELLOW}[!]${NC} $1"; }
+error()   { echo -e "  ${RED}[✘]${NC} $1"; exit 1; }
+section() { echo "" ; echo -e "${BLUE}── $1${NC}"; }
 
 # ───────────────────────────────────────────────────────
 #  Homebrew 설치
@@ -47,7 +48,7 @@ install_packages() {
 
   local packages=(
     git           # 버전 관리
-    git-flow      # Git 브랜치 워크플로우
+    git-flow-avh  # Git 브랜치 워크플로우
     tmux          # 세션/분할 관리
     starship      # 프롬프트
     ripgrep       # 빠른 검색 (rg)
@@ -74,23 +75,20 @@ install_packages() {
 #  Font 설치
 # ───────────────────────────────────────────────────────
 install_font() {
-  local font_name="Cascadia Mono NF"
+  local fonts=(
+    font-cascadia-mono-nf
+    font-noto-sans-mono-cjk-kr
+  )
 
-  if fc-list 2>/dev/null | grep -q "CascadiaMonoNF"; then
-    success "Cascadia Mono NF 이미 설치됨"
-  else
-    info "Cascadia Mono NF 폰트 설치 중..."
-    brew install --cask font-cascadia-mono-nf
-    success "Cascadia Mono NF 설치 완료"
-  fi
-
-  if fc-list 2>/dev/null | grep -q "NotoSansMonoCJKkr"; then
-    success "Noto Sans Mono CJK KR 이미 설치됨"
-  else
-    info "Noto Sans Mono CJK KR 폰트 설치 중..."
-    brew install --cask font-noto-sans-mono-cjk-kr
-    success "Noto Sans Mono CJK KR 설치 완료"
-  fi
+  for font in "${fonts[@]}"; do
+    if brew list --cask "$font" &>/dev/null; then
+      success "$font 이미 설치됨"
+    else
+      info "$font 설치 중..."
+      brew install --cask "$font"
+      success "$font 설치 완료"
+    fi
+  done
 }
 
 # ───────────────────────────────────────────────────────
@@ -255,14 +253,27 @@ main() {
   echo -e "${BLUE}═══════════════════════════════════════════${NC}"
   echo ""
 
+  section "Homebrew"
   install_homebrew
+
+  section "패키지"
   install_packages
+
+  section "폰트"
   install_font
+
+  section "Ghostty"
   install_ghostty
   setup_ghostty_config
+
+  section "Oh My Zsh"
   install_oh_my_zsh
   setup_zshrc
+
+  section "Starship"
   setup_starship_config
+
+  section "키보드"
   setup_keybinding
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
@@ -274,7 +285,7 @@ main() {
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
   echo -e "    폰트     → Cascadia Mono NF, Noto Sans Mono CJK KR"
-  echo -e "    CLI 도구 → git-flow, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
+  echo -e "    CLI 도구 → git-flow-avh, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
   echo -e "    키보드   → 한영 백틱(\`) 설정"
   echo ""
