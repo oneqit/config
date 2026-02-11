@@ -14,7 +14,7 @@ export ZSH="$HOME/.oh-my-zsh"
 
 plugins=(
   git
-  zsh-autosuggestions
+  # zsh-autosuggestions
   zsh-syntax-highlighting
   zsh-completions
 )
