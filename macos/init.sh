@@ -4,23 +4,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATE_DIR="$SCRIPT_DIR/templates"
 
-# ═══════════════════════════════════════════════════════
-#  macOS 초기 개발 환경 세팅 스크립트
-#
-#  구성:
-#    - Homebrew (패키지 매니저)
-#    - Nerd Font (아이콘 폰트)
-#    - Ghostty (터미널)
-#    - tmux (세션/분할 관리)
-#    - Oh My Zsh (Zsh 프레임워크)
-#    - Starship (프롬프트)
-#    - 한영 키보드 백틱 설정
-#
-#  사용법:
-#    chmod +x setup.sh
-#    ./setup.sh
-# ═══════════════════════════════════════════════════════
-
 # ───────────────────────────────────────────────────────
 #  색상 정의
 # ───────────────────────────────────────────────────────
@@ -64,9 +47,14 @@ install_packages() {
 
   local packages=(
     git           # 버전 관리
+    git-flow      # Git 브랜치 워크플로우
     tmux          # 세션/분할 관리
-    ripgrep       # 빠른 검색 (rg)
     starship      # 프롬프트
+    ripgrep       # 빠른 검색 (rg)
+    btop          # 시스템 모니터링
+    lazygit       # Git TUI
+    lazydocker    # Docker TUI
+    k9s           # Kubernetes TUI
     colima        # docker 컨테이너 런타임
     docker-credential-helper  # colima + Docker 자격증명 관리
   )
@@ -158,23 +146,19 @@ install_oh_my_zsh() {
     success "Oh My Zsh 설치 완료"
   fi
 
-  # zsh-autosuggestions 플러그인
-  local auto_dir="${ZSH_CUSTOM:-$omz_dir/custom}/plugins/zsh-autosuggestions"
-  if [[ ! -d "$auto_dir" ]]; then
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$auto_dir"
-  fi
+  local plugins=(
+    zsh-users/zsh-autosuggestions
+    zsh-users/zsh-syntax-highlighting
+    zsh-users/zsh-completions
+  )
 
-  # zsh-syntax-highlighting 플러그인
-  local syntax_dir="${ZSH_CUSTOM:-$omz_dir/custom}/plugins/zsh-syntax-highlighting"
-  if [[ ! -d "$syntax_dir" ]]; then
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting "$syntax_dir"
-  fi
-
-  # zsh-completions 플러그인
-  local comp_dir="${ZSH_CUSTOM:-$omz_dir/custom}/plugins/zsh-completions"
-  if [[ ! -d "$comp_dir" ]]; then
-    git clone https://github.com/zsh-users/zsh-completions "$comp_dir"
-  fi
+  for repo in "${plugins[@]}"; do
+    local name="${repo##*/}"
+    local dir="${ZSH_CUSTOM:-$omz_dir/custom}/plugins/$name"
+    if [[ ! -d "$dir" ]]; then
+      git clone "https://github.com/$repo" "$dir"
+    fi
+  done
 }
 
 # ───────────────────────────────────────────────────────
@@ -183,7 +167,14 @@ install_oh_my_zsh() {
 setup_zshrc() {
   local zshrc="$HOME/.zshrc"
 
-  if [[ -f "$zshrc" ]] && cmp -s "$TEMPLATE_DIR/.zshrc" "$zshrc"; then
+  # 기존 .zshrc에서 Extras 섹션 아래 사용자 설정 추출
+  local extras=""
+  if [[ -f "$zshrc" ]]; then
+    local extras_marker="#  Extras"
+    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3)
+  fi
+
+  if [[ -f "$zshrc" ]] && cmp -s "$TEMPLATE_DIR/.zshrc" <(cat "$TEMPLATE_DIR/.zshrc" <(echo "$extras")); then
     success ".zshrc 변경 없음 → 스킵"
     return
   fi
@@ -197,7 +188,13 @@ setup_zshrc() {
 
   cp "$TEMPLATE_DIR/.zshrc" "$zshrc"
 
-  success ".zshrc 설정 완료"
+  # Extras 섹션 아래 사용자 설정 복원
+  if [[ -n "$extras" ]]; then
+    echo "$extras" >> "$zshrc"
+    success ".zshrc 설정 완료 (Extras 설정 유지됨)"
+  else
+    success ".zshrc 설정 완료"
+  fi
 }
 
 # ───────────────────────────────────────────────────────
@@ -275,8 +272,10 @@ main() {
   echo -e "  설치된 구성:"
   echo -e "    터미널   → Ghostty"
   echo -e "    프롬프트 → Starship"
-  echo -e "    플러그인 → Oh My Zsh (git alias, 자동제안, 구문강조)"
-  echo -e "    폰트     → Cascadia Mono NF"
+  echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
+  echo -e "    폰트     → Cascadia Mono NF, Noto Sans Mono CJK KR"
+  echo -e "    CLI 도구 → git-flow, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
+  echo -e "    컨테이너 → colima, docker-credential-helper"
   echo -e "    키보드   → 한영 백틱(\`) 설정"
   echo ""
 }
