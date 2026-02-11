@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TEMPLATE_DIR="$SCRIPT_DIR/templates"
+
 # ═══════════════════════════════════════════════════════
 #  macOS 초기 개발 환경 세팅 스크립트
 #
@@ -64,7 +67,7 @@ install_packages() {
     tmux          # 세션/분할 관리
     ripgrep       # 빠른 검색 (rg)
     starship      # 프롬프트
-    colima        # 컨테이너 런타임
+    colima        # docker 컨테이너 런타임
     docker-credential-helper  # colima + Docker 자격증명 관리
   )
 
@@ -124,6 +127,11 @@ setup_ghostty_config() {
 
   mkdir -p "$config_dir"
 
+  if [[ -f "$config_file" ]] && cmp -s "$TEMPLATE_DIR/ghostty.config" "$config_file"; then
+    success "Ghostty 설정 변경 없음 → 스킵"
+    return
+  fi
+
   if [[ -f "$config_file" ]]; then
     warn "Ghostty 설정 파일 이미 존재 → 백업 후 덮어쓰기"
     cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
@@ -131,33 +139,7 @@ setup_ghostty_config() {
 
   info "Ghostty 설정 파일 생성 중..."
 
-  cat > "$config_file" << 'EOF'
-# ═══════════════════════════════════════
-#  Ghostty 설정
-# ═══════════════════════════════════════
-
-# ─── 폰트 ───
-font-family = Cascadia Mono NF
-font-codepoint-map = U+AC00-U+D7AF,U+1100-U+11FF,U+3130-U+318F=Noto Sans Mono CJK KR
-font-size = 12
-
-# ─── 창 ───
-window-padding-x = 2
-window-padding-y = 2
-window-decoration = true
-
-# ─── 커서 ───
-cursor-style = bar
-cursor-style-blink = false
-
-# ─── 기타 ───
-copy-on-select = clipboard
-confirm-close-surface = false
-shell-integration = zsh
-
-# ─── macOS 전용 ───
-macos-option-as-alt = true
-EOF
+  cp "$TEMPLATE_DIR/ghostty.config" "$config_file"
 
   success "Ghostty 설정 완료 → $config_file"
 }
@@ -201,6 +183,11 @@ install_oh_my_zsh() {
 setup_zshrc() {
   local zshrc="$HOME/.zshrc"
 
+  if [[ -f "$zshrc" ]] && cmp -s "$TEMPLATE_DIR/.zshrc" "$zshrc"; then
+    success ".zshrc 변경 없음 → 스킵"
+    return
+  fi
+
   if [[ -f "$zshrc" ]]; then
     warn ".zshrc 이미 존재 → 백업"
     cp "$zshrc" "${zshrc}.backup.$(date +%Y%m%d%H%M%S)"
@@ -208,39 +195,7 @@ setup_zshrc() {
 
   info ".zshrc 생성 중..."
 
-  cat > "$zshrc" << 'ZSHRC'
-# ═══════════════════════════════════════════════════════
-#  .zshrc
-# ═══════════════════════════════════════════════════════
-
-# ─── Homebrew PATH (Apple Silicon) ───
-if [[ -f /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
-# ═══════════════════════════════════════════════════════
-#  Oh My Zsh
-# ═══════════════════════════════════════════════════════
-export ZSH="$HOME/.oh-my-zsh"
-
-plugins=(
-  git
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-  zsh-completions
-)
-
-source "$ZSH/oh-my-zsh.sh"
-
-# ═══════════════════════════════════════════════════════
-#  Starship
-# ═══════════════════════════════════════════════════════
-eval "$(starship init zsh)"
-
-# ═══════════════════════════════════════════════════════
-#  Extras
-# ═══════════════════════════════════════════════════════
-ZSHRC
+  cp "$TEMPLATE_DIR/.zshrc" "$zshrc"
 
   success ".zshrc 설정 완료"
 }
@@ -251,6 +206,11 @@ ZSHRC
 setup_starship_config() {
   local config_file="$HOME/.config/starship.toml"
 
+  if [[ -f "$config_file" ]] && cmp -s "$TEMPLATE_DIR/starship.toml" "$config_file"; then
+    success "Starship 설정 변경 없음 → 스킵"
+    return
+  fi
+
   if [[ -f "$config_file" ]]; then
     warn "starship.toml 이미 존재 → 백업 후 덮어쓰기"
     cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
@@ -258,47 +218,7 @@ setup_starship_config() {
 
   info "Starship 설정 파일 생성 중..."
 
-  cat > "$config_file" << 'EOF'
-# ═══════════════════════════════════════
-#  Starship 프롬프트 설정
-# ═══════════════════════════════════════
-
-# 프롬프트 포맷
-format = """
-$directory\
-$git_branch\
-$git_status\
-$cmd_duration\
-$line_break\
-$character"""
-
-# ─── 프롬프트 문자 ───
-[character]
-success_symbol = "[❯](green)"
-error_symbol = "[❯](red)"
-
-# ─── 디렉토리 ───
-[directory]
-truncation_length = 3
-truncation_symbol = "…/"
-style = "bold cyan"
-
-# ─── Git 브랜치 ───
-[git_branch]
-symbol = " "
-style = "bold purple"
-
-# ─── Git 상태 ───
-[git_status]
-format = '([$all_status$ahead_behind]($style) )'
-style = "bold red"
-
-# ─── 명령어 실행 시간 ───
-[cmd_duration]
-min_time = 500
-format = "[⏱ $duration]($style) "
-style = "bold yellow"
-EOF
+  cp "$TEMPLATE_DIR/starship.toml" "$config_file"
 
   success "Starship 설정 완료 → $config_file"
 }
@@ -310,6 +230,11 @@ setup_keybinding() {
   local keybinding_dir="$HOME/Library/KeyBindings"
   local keybinding_file="$keybinding_dir/DefaultkeyBinding.dict"
 
+  if [[ -f "$keybinding_file" ]] && cmp -s "$TEMPLATE_DIR/DefaultkeyBinding.dict" "$keybinding_file"; then
+    success "백틱 설정 변경 없음 → 스킵"
+    return
+  fi
+
   if [[ -f "$keybinding_file" ]]; then
     warn "DefaultkeyBinding.dict 이미 존재 → 백업 후 덮어쓰기"
     cp "$keybinding_file" "${keybinding_file}.backup.$(date +%Y%m%d%H%M%S)"
@@ -318,11 +243,7 @@ setup_keybinding() {
   info "한영 키보드 백틱 설정 중..."
 
   mkdir -p "$keybinding_dir"
-  cat > "$keybinding_file" << 'EOF'
-{
-    "₩" = ("insertText:", "`");
-}
-EOF
+  cp "$TEMPLATE_DIR/DefaultkeyBinding.dict" "$keybinding_file"
 
   success "백틱 설정 완료 → $keybinding_file (앱 재시작 후 적용)"
 }
