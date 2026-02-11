@@ -169,10 +169,10 @@ setup_zshrc() {
   local extras=""
   if [[ -f "$zshrc" ]]; then
     local extras_marker="#  Extras"
-    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3)
+    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3 | sed '/./,$!d')
   fi
 
-  if [[ -f "$zshrc" ]] && cmp -s "$zshrc" <(cat "$TEMPLATE_DIR/.zshrc"; [[ -n "$extras" ]] && echo "$extras"); then
+  if [[ -f "$zshrc" ]] && cmp -s <(printf '%s' "$(cat "$zshrc")") <(printf '%s' "$(cat "$TEMPLATE_DIR/.zshrc"; [[ -n "$extras" ]] && echo "$extras")"); then
     success ".zshrc 변경 없음 → 스킵"
     return
   fi
@@ -188,7 +188,7 @@ setup_zshrc() {
 
   # Extras 섹션 아래 사용자 설정 복원
   if [[ -n "$extras" ]]; then
-    echo "$extras" >> "$zshrc"
+    printf '%s\n\n' "$extras" >> "$zshrc"
     success ".zshrc 설정 완료 → \"$zshrc\" (Extras 설정 유지됨)"
   else
     success ".zshrc 설정 완료 → \"$zshrc\""
