@@ -127,7 +127,7 @@ setup_ghostty_config() {
 
   cp "$TEMPLATE_DIR/ghostty.config" "$config_file"
 
-  success "Ghostty 설정 완료 → $config_file"
+  success "Ghostty 설정 완료 → \"$config_file\""
 }
 
 # ───────────────────────────────────────────────────────
@@ -189,9 +189,9 @@ setup_zshrc() {
   # Extras 섹션 아래 사용자 설정 복원
   if [[ -n "$extras" ]]; then
     echo "$extras" >> "$zshrc"
-    success ".zshrc 설정 완료 (Extras 설정 유지됨)"
+    success ".zshrc 설정 완료 → \"$zshrc\" (Extras 설정 유지됨)"
   else
-    success ".zshrc 설정 완료"
+    success ".zshrc 설정 완료 → \"$zshrc\""
   fi
 }
 
@@ -215,7 +215,7 @@ setup_starship_config() {
 
   cp "$TEMPLATE_DIR/starship.toml" "$config_file"
 
-  success "Starship 설정 완료 → $config_file"
+  success "Starship 설정 완료 → \"$config_file\""
 }
 
 # ───────────────────────────────────────────────────────
@@ -240,7 +240,7 @@ setup_keybinding() {
   mkdir -p "$keybinding_dir"
   cp "$TEMPLATE_DIR/DefaultkeyBinding.dict" "$keybinding_file"
 
-  success "백틱 설정 완료 → $keybinding_file (앱 재시작 후 적용)"
+  success "백틱 설정 완료 → \"$keybinding_file\" (앱 재시작 후 적용)"
 }
 
 # ───────────────────────────────────────────────────────
