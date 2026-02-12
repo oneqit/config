@@ -76,7 +76,7 @@ install_packages() {
 # ───────────────────────────────────────────────────────
 install_font() {
   local fonts=(
-    font-cascadia-mono-nf
+    font-caskaydia-cove-nerd-font
     font-noto-sans-mono-cjk-kr
   )
 
@@ -284,7 +284,7 @@ main() {
   echo -e "    터미널   → Ghostty"
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
-  echo -e "    폰트     → Cascadia Mono NF, Noto Sans Mono CJK KR"
+  echo -e "    폰트     → CaskaydiaCove Nerd Font, Noto Sans Mono CJK KR"
   echo -e "    CLI 도구 → git-flow-avh, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
   echo -e "    키보드   → 한영 백틱(\`) 설정"
