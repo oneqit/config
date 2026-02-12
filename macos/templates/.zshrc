@@ -21,6 +21,10 @@ plugins=(
 
 source "$ZSH/oh-my-zsh.sh"
 
+# ─── zsh-syntax-highlighting 경로 밑줄 비활성화 ───
+typeset -A ZSH_HIGHLIGHT_STYLES
+ZSH_HIGHLIGHT_STYLES[path]='none'
+
 # ═══════════════════════════════════════════════════════
 #  Starship
 # ═══════════════════════════════════════════════════════
