@@ -7,6 +7,7 @@ source "$REPO_DIR/lib/platform.sh"
 source "$REPO_DIR/lib/zsh/setup.sh"
 source "$REPO_DIR/lib/starship/setup.sh"
 source "$REPO_DIR/lib/tmux/setup.sh"
+source "$REPO_DIR/lib/deploy.sh"
 
 # ───────────────────────────────────────────────────────
 #  패키지 업데이트
@@ -54,6 +55,7 @@ install_packages() {
     ripgrep
     starship
     lazygit
+    unzip
   )
 
   for pkg_name in "${packages[@]}"; do
@@ -65,6 +67,31 @@ install_packages() {
       success "$pkg_name 설치 완료"
     fi
   done
+}
+
+# ───────────────────────────────────────────────────────
+#  폰트 설치
+# ───────────────────────────────────────────────────────
+install_font() {
+  local font_name="CaskaydiaCoveNerdFont-Regular"
+  local src="$HOME/.termux/.font-origin.ttf"
+  local dst="$HOME/.termux/font.ttf"
+  local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.zip"
+
+  if [[ ! -f "$src" ]]; then
+    local tmp_dir
+    tmp_dir="$(mktemp -d)"
+
+    info "CaskaydiaCove Nerd Font 다운로드 중..."
+    curl -fsSL -o "$tmp_dir/CascadiaCode.zip" "$url"
+    unzip -qo "$tmp_dir/CascadiaCode.zip" "${font_name}.ttf" -d "$tmp_dir"
+
+    mkdir -p "$HOME/.termux"
+    cp "$tmp_dir/${font_name}.ttf" "$src"
+    rm -rf "$tmp_dir"
+  fi
+
+  deploy_config "CaskaydiaCove Nerd Font 폰트" "$src" "$dst"
 }
 
 # ───────────────────────────────────────────────────────
@@ -119,6 +146,9 @@ main() {
   section "Starship"
   setup_starship_config
 
+  section "폰트"
+  install_font
+
   section "셸 기본값"
   change_shell_to_zsh
 
@@ -133,6 +163,7 @@ main() {
   echo -e "  설치된 구성:"
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
+  echo -e "    폰트     → CaskaydiaCove Nerd Font"
   echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
