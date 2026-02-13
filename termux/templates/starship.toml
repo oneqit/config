@@ -11,7 +11,7 @@ $line_break$character"""
 [time]
 disabled = false
 time_format = "%T"
-format = '\\[[$time]($style)\\] '
+format = '\[[$time]($style)\] '
 
 [directory]
 read_only = " 󰌾"
