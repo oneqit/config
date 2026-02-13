@@ -1,23 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE_DIR="$SCRIPT_DIR/templates"
-
-# ───────────────────────────────────────────────────────
-#  색상 정의
-# ───────────────────────────────────────────────────────
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-info()    { echo -e "  ${BLUE}[i]${NC} $1"; }
-success() { echo -e "  ${GREEN}[✔]${NC} $1"; }
-warn()    { echo -e "  ${YELLOW}[!]${NC} $1"; }
-error()   { echo -e "  ${RED}[✘]${NC} $1"; exit 1; }
-section() { echo "" ; echo -e "${BLUE}── $1${NC}"; }
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+KEYBINDING_DIR="$SCRIPT_DIR/keybinding"
+source "$REPO_DIR/lib/platform.sh"
+source "$REPO_DIR/lib/zsh/setup.sh"
+source "$REPO_DIR/lib/starship/setup.sh"
+source "$REPO_DIR/lib/tmux/setup.sh"
+source "$REPO_DIR/lib/ghostty/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Homebrew 설치
@@ -106,127 +97,13 @@ install_ghostty() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Ghostty 설정
-# ───────────────────────────────────────────────────────
-setup_ghostty_config() {
-  local config_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
-  local config_file="$config_dir/config"
-
-  mkdir -p "$config_dir"
-
-  if [[ -f "$config_file" ]] && cmp -s "$TEMPLATE_DIR/ghostty.config" "$config_file"; then
-    success "Ghostty 설정 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$config_file" ]]; then
-    warn "Ghostty 설정 파일 이미 존재 → 백업 후 덮어쓰기"
-    cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info "Ghostty 설정 파일 생성 중..."
-
-  cp "$TEMPLATE_DIR/ghostty.config" "$config_file"
-
-  success "Ghostty 설정 완료 → \"$config_file\""
-}
-
-# ───────────────────────────────────────────────────────
-#  Oh My Zsh 설치
-# ───────────────────────────────────────────────────────
-install_oh_my_zsh() {
-  local omz_dir="$HOME/.oh-my-zsh"
-
-  if [[ -d "$omz_dir" ]]; then
-    success "Oh My Zsh 이미 설치됨"
-  else
-    info "Oh My Zsh 설치 중..."
-    RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    success "Oh My Zsh 설치 완료"
-  fi
-
-  local plugins=(
-    zsh-users/zsh-autosuggestions
-    zsh-users/zsh-syntax-highlighting
-    zsh-users/zsh-completions
-  )
-
-  for repo in "${plugins[@]}"; do
-    local name="${repo##*/}"
-    local dir="${ZSH_CUSTOM:-$omz_dir/custom}/plugins/$name"
-    if [[ ! -d "$dir" ]]; then
-      git clone "https://github.com/$repo" "$dir"
-    fi
-  done
-}
-
-# ───────────────────────────────────────────────────────
-#  .zshrc 설정
-# ───────────────────────────────────────────────────────
-setup_zshrc() {
-  local zshrc="$HOME/.zshrc"
-
-  # 기존 .zshrc에서 Extras 섹션 아래 사용자 설정 추출
-  local extras=""
-  if [[ -f "$zshrc" ]]; then
-    local extras_marker="#  Extras"
-    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3 | sed '/./,$!d')
-  fi
-
-  if [[ -f "$zshrc" ]] && cmp -s <(printf '%s' "$(cat "$zshrc")") <(printf '%s' "$(cat "$TEMPLATE_DIR/.zshrc"; [[ -n "$extras" ]] && echo "$extras")"); then
-    success ".zshrc 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$zshrc" ]]; then
-    warn ".zshrc 이미 존재 → 백업"
-    cp "$zshrc" "${zshrc}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info ".zshrc 생성 중..."
-
-  cp "$TEMPLATE_DIR/.zshrc" "$zshrc"
-
-  # Extras 섹션 아래 사용자 설정 복원
-  if [[ -n "$extras" ]]; then
-    printf '%s\n\n' "$extras" >> "$zshrc"
-    success ".zshrc 설정 완료 → \"$zshrc\" (Extras 설정 유지됨)"
-  else
-    success ".zshrc 설정 완료 → \"$zshrc\""
-  fi
-}
-
-# ───────────────────────────────────────────────────────
-#  Starship 설정
-# ───────────────────────────────────────────────────────
-setup_starship_config() {
-  local config_file="$HOME/.config/starship.toml"
-
-  if [[ -f "$config_file" ]] && cmp -s "$TEMPLATE_DIR/starship.toml" "$config_file"; then
-    success "Starship 설정 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$config_file" ]]; then
-    warn "starship.toml 이미 존재 → 백업 후 덮어쓰기"
-    cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info "Starship 설정 파일 생성 중..."
-
-  cp "$TEMPLATE_DIR/starship.toml" "$config_file"
-
-  success "Starship 설정 완료 → \"$config_file\""
-}
-
-# ───────────────────────────────────────────────────────
 #  한영 키보드 백틱(`) 입력 설정
 # ───────────────────────────────────────────────────────
 setup_keybinding() {
   local keybinding_dir="$HOME/Library/KeyBindings"
   local keybinding_file="$keybinding_dir/DefaultkeyBinding.dict"
 
-  if [[ -f "$keybinding_file" ]] && cmp -s "$TEMPLATE_DIR/DefaultkeyBinding.dict" "$keybinding_file"; then
+  if [[ -f "$keybinding_file" ]] && cmp -s "$KEYBINDING_DIR/DefaultkeyBinding.dict" "$keybinding_file"; then
     success "백틱 설정 변경 없음 → 스킵"
     return
   fi
@@ -239,7 +116,7 @@ setup_keybinding() {
   info "한영 키보드 백틱 설정 중..."
 
   mkdir -p "$keybinding_dir"
-  cp "$TEMPLATE_DIR/DefaultkeyBinding.dict" "$keybinding_file"
+  cp "$KEYBINDING_DIR/DefaultkeyBinding.dict" "$keybinding_file"
 
   success "백틱 설정 완료 → \"$keybinding_file\" (앱 재시작 후 적용)"
 }
@@ -248,6 +125,8 @@ setup_keybinding() {
 #  메인 실행
 # ───────────────────────────────────────────────────────
 main() {
+  ensure_macos
+
   echo ""
   echo -e "${BLUE}═══════════════════════════════════════════${NC}"
   echo -e "${BLUE}  macOS 환경 초기 세팅${NC}"
@@ -276,6 +155,10 @@ main() {
 
   section "키보드"
   setup_keybinding
+
+  section "tmux"
+  setup_tmux
+
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
   echo -e "${GREEN}  ✔ 세팅 완료!${NC}"
@@ -289,7 +172,8 @@ main() {
   echo -e "    CLI 도구 → git-flow-avh, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
   echo -e "    키보드   → 한영 백틱(\`) 설정"
+  echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
 }
 
-main
+main "$@"
