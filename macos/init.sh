@@ -49,6 +49,7 @@ install_packages() {
   local packages=(
     git           # 버전 관리
     git-flow-avh  # Git 브랜치 워크플로우
+    neovim        # 텍스트 에디터
     tmux          # 세션/분할 관리
     starship      # 프롬프트
     ripgrep       # 빠른 검색 (rg)
@@ -285,7 +286,7 @@ main() {
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
   echo -e "    폰트     → CaskaydiaCove Nerd Font, Noto Sans Mono CJK KR"
-  echo -e "    CLI 도구 → git-flow-avh, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
+  echo -e "    CLI 도구 → git-flow-avh, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
   echo -e "    키보드   → 한영 백틱(\`) 설정"
   echo ""
