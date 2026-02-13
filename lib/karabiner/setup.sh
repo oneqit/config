@@ -1,28 +1,29 @@
 #!/usr/bin/env bash
 
-_GHOSTTY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$_GHOSTTY_DIR/../deploy.sh"
+_KARABINER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$_KARABINER_DIR/../deploy.sh"
 
 # ───────────────────────────────────────────────────────
-#  Ghostty 설치
+#  Karabiner-Elements 설치
 # ───────────────────────────────────────────────────────
-install_ghostty() {
-  if [[ -d "/Applications/Ghostty.app" ]] || brew list --cask ghostty &>/dev/null; then
-    success "Ghostty 이미 설치됨"
+install_karabiner() {
+  if [[ -d "/Applications/Karabiner-Elements.app" ]] || brew list --cask karabiner-elements &>/dev/null; then
+    success "Karabiner-Elements 이미 설치됨"
   else
-    info "Ghostty 설치 중..."
-    brew install --cask ghostty
-    success "Ghostty 설치 완료"
+    info "Karabiner-Elements 설치 중..."
+    brew install --cask karabiner-elements
+    success "Karabiner-Elements 설치 완료"
   fi
 }
 
 # ───────────────────────────────────────────────────────
-#  Ghostty 설정
+#  Karabiner 설정
 # ───────────────────────────────────────────────────────
-setup_ghostty_config() {
-  deploy_config "Ghostty 설정" "$_GHOSTTY_DIR/config" "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+setup_karabiner_config() {
+  deploy_config "Karabiner 설정" "$_KARABINER_DIR/karabiner.json" "$HOME/.config/karabiner/karabiner.json"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  setup_ghostty_config
+  install_karabiner
+  setup_karabiner_config
 fi

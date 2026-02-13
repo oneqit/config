@@ -9,6 +9,7 @@ source "$REPO_DIR/lib/zsh/setup.sh"
 source "$REPO_DIR/lib/starship/setup.sh"
 source "$REPO_DIR/lib/tmux/setup.sh"
 source "$REPO_DIR/lib/ghostty/setup.sh"
+source "$REPO_DIR/lib/karabiner/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Homebrew 설치
@@ -35,25 +36,26 @@ install_homebrew() {
 #  패키지 설치
 # ───────────────────────────────────────────────────────
 install_packages() {
-  info "패키지 설치 중..."
-
+  # brew패키지:커맨드명
   local packages=(
-    git           # 버전 관리
-    git-flow-avh  # Git 브랜치 워크플로우
-    neovim        # 텍스트 에디터
-    tmux          # 세션/분할 관리
-    starship      # 프롬프트
-    ripgrep       # 빠른 검색 (rg)
-    btop          # 시스템 모니터링
-    lazygit       # Git TUI
-    lazydocker    # Docker TUI
-    k9s           # Kubernetes TUI
-    colima        # docker 컨테이너 런타임
-    docker-credential-helper  # colima + Docker 자격증명 관리
+    "git:git"
+    "git-flow-avh:git-flow"
+    "neovim:nvim"
+    "tmux:tmux"
+    "starship:starship"
+    "ripgrep:rg"
+    "btop:btop"
+    "lazygit:lazygit"
+    "lazydocker:lazydocker"
+    "k9s:k9s"
+    "colima:colima"
+    "docker-credential-helper:docker-credential-osxkeychain"
   )
 
-  for pkg in "${packages[@]}"; do
-    if brew list "$pkg" &>/dev/null; then
+  for entry in "${packages[@]}"; do
+    local pkg="${entry%%:*}"
+    local cmd="${entry#*:}"
+    if command -v "$cmd" &>/dev/null; then
       success "$pkg 이미 설치됨"
     else
       info "$pkg 설치 중..."
@@ -84,15 +86,56 @@ install_font() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Ghostty 설치
+#  앱 설치
 # ───────────────────────────────────────────────────────
-install_ghostty() {
-  if brew list --cask ghostty &>/dev/null; then
-    success "Ghostty 이미 설치됨"
+install_apps() {
+  # cask명:앱이름
+  local apps=(
+    "rectangle:Rectangle"
+    "scroll-reverser:Scroll Reverser"
+  )
+
+  for entry in "${apps[@]}"; do
+    local cask="${entry%%:*}"
+    local app_name="${entry#*:}"
+    if [[ -d "/Applications/$app_name.app" ]] || brew list --cask "$cask" &>/dev/null; then
+      success "$app_name 이미 설치됨"
+    else
+      info "$app_name 설치 중..."
+      brew install --cask "$cask"
+      success "$app_name 설치 완료"
+    fi
+  done
+}
+
+# ───────────────────────────────────────────────────────
+#  macOS 기본 설정
+# ───────────────────────────────────────────────────────
+setup_macos_defaults() {
+  if [[ "$(defaults read -g ApplePressAndHoldEnabled 2>/dev/null)" == "0" ]]; then
+    success "키 반복 입력 이미 활성화됨"
   else
-    info "Ghostty 설치 중..."
-    brew install --cask ghostty
-    success "Ghostty 설치 완료"
+    info "키 반복 입력 활성화..."
+    defaults write -g ApplePressAndHoldEnabled -bool false
+    success "키 반복 입력 활성화 완료"
+  fi
+}
+
+# ───────────────────────────────────────────────────────
+#  Scroll Reverser 설정
+# ───────────────────────────────────────────────────────
+setup_scroll_reverser() {
+  local sr="com.pilotmoon.scroll-reverser"
+  if [[ "$(defaults read "$sr" ReverseMouse 2>/dev/null)" == "1" ]]; then
+    success "Scroll Reverser 이미 설정됨"
+  else
+    info "Scroll Reverser 설정 중..."
+    defaults write "$sr" ReverseMouse -bool true
+    defaults write "$sr" ReverseTrackpad -bool false
+    defaults write "$sr" ReverseX -bool true
+    defaults write "$sr" ReverseY -bool true
+    defaults write "$sr" HideIcon -bool true
+    success "Scroll Reverser 설정 완료 (마우스 수평/수직 반전, 아이콘 숨김)"
   fi
 }
 
@@ -124,6 +167,20 @@ main() {
   section "폰트"
   install_font
 
+  section "앱"
+  install_apps
+
+  section "마우스"
+  setup_scroll_reverser
+
+  section "키보드"
+  setup_macos_defaults
+  setup_keybinding
+
+  section "Karabiner"
+  install_karabiner
+  setup_karabiner_config
+
   section "Ghostty"
   install_ghostty
   setup_ghostty_config
@@ -134,9 +191,6 @@ main() {
 
   section "Starship"
   setup_starship_config
-
-  section "키보드"
-  setup_keybinding
 
   section "tmux"
   setup_tmux
@@ -151,10 +205,16 @@ main() {
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
   echo -e "    폰트     → CaskaydiaCove Nerd Font, Noto Sans Mono CJK KR"
+  echo -e "    앱       → Rectangle, Scroll Reverser"
   echo -e "    CLI 도구 → git-flow-avh, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
-  echo -e "    키보드   → 한영 백틱(\`) 설정"
+  echo -e "    키보드   → 키 반복 입력, 한영 백틱(\`), Karabiner (⌥R/⌘R→F18)"
   echo -e "    tmux     → 설정 + 셸 함수"
+  echo ""
+  echo -e "  ${YELLOW}[!] 수동 설정 필요:${NC}"
+  echo -e "    Scroll Reverser → 로그인 시 시작"
+  echo -e "    시스템 설정 → 키보드 → 키보드 단축키 → 입력 소스"
+  echo -e "      → \"다음 입력 소스 선택\" 단축키를 F18로 변경"
   echo ""
 }
 
