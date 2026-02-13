@@ -100,25 +100,7 @@ install_ghostty() {
 #  한영 키보드 백틱(`) 입력 설정
 # ───────────────────────────────────────────────────────
 setup_keybinding() {
-  local keybinding_dir="$HOME/Library/KeyBindings"
-  local keybinding_file="$keybinding_dir/DefaultkeyBinding.dict"
-
-  if [[ -f "$keybinding_file" ]] && cmp -s "$KEYBINDING_DIR/DefaultkeyBinding.dict" "$keybinding_file"; then
-    success "백틱 설정 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$keybinding_file" ]]; then
-    warn "DefaultkeyBinding.dict 이미 존재 → 백업 후 덮어쓰기"
-    cp "$keybinding_file" "${keybinding_file}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info "한영 키보드 백틱 설정 중..."
-
-  mkdir -p "$keybinding_dir"
-  cp "$KEYBINDING_DIR/DefaultkeyBinding.dict" "$keybinding_file"
-
-  success "백틱 설정 완료 → \"$keybinding_file\" (앱 재시작 후 적용)"
+  deploy_config "백틱 설정" "$KEYBINDING_DIR/DefaultkeyBinding.dict" "$HOME/Library/KeyBindings/DefaultkeyBinding.dict"
 }
 
 # ───────────────────────────────────────────────────────

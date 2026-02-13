@@ -5,7 +5,7 @@
 ## 설치
 
 ```bash
-git clone <repo-url> ~/.config/oneqit/config
+git clone https://github.com/oneqit/config.git ~/.config/oneqit/config
 ```
 
 ## 사용법
@@ -17,7 +17,7 @@ cd ~/.config/oneqit/config
 ./init.sh
 ```
 
-개별 도구만 세팅:
+개별 도구만 세팅 (`curl`, `git` 필요):
 
 ```bash
 ./lib/zsh/setup.sh       # Oh My Zsh + .zshrc
@@ -32,6 +32,7 @@ cd ~/.config/oneqit/config
 init.sh              # 플랫폼 판별 → 디스패치
 lib/
 ├── logging.sh       # 공유 로깅 함수
+├── deploy.sh        # 설정 파일 배포 (백업 + 복사)
 ├── platform.sh      # 플랫폼 판별 함수
 ├── ghostty/         # Ghostty 설정 + 셋업
 ├── starship/        # Starship 설정 + 셋업
