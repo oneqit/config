@@ -74,9 +74,12 @@ install_packages() {
 # ───────────────────────────────────────────────────────
 install_font() {
   local font_name="CaskaydiaMonoNerdFont-Regular"
-  local src="$HOME/.termux/.font-origin.ttf"
   local dst="$HOME/.termux/font.ttf"
   local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaMono.zip"
+
+  local url_hash
+  url_hash="$(printf '%s' "$url" | md5sum | cut -d' ' -f1)"
+  local src="$HOME/.termux/.font-${font_name}-${url_hash}.ttf"
 
   if [[ ! -f "$src" ]]; then
     local tmp_dir
