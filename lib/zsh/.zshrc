@@ -49,6 +49,6 @@ command -v starship &>/dev/null && eval "$(starship init zsh)"
 [[ -n "${ONEQIT_CONFIG:-}" && -f "$ONEQIT_CONFIG/lib/tmux/.zshrc.append" ]] && source "$ONEQIT_CONFIG/lib/tmux/.zshrc.append"
 
 # ═══════════════════════════════════════════════════════
-#  Extras
+#  Extras — 아래에 추가한 설정은 init/setup 재실행 시에도 보존
 # ═══════════════════════════════════════════════════════
 

@@ -47,9 +47,8 @@ setup_zshrc() {
 
   if [[ -f "$zshrc" ]]; then
     extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3)
-    # leading/trailing 빈 줄 제거
+    # leading 빈 줄 제거 (템플릿 끝 빈 줄과 중복 방지, trailing은 $()가 자동 제거)
     while [[ "$extras" == $'\n'* ]]; do extras="${extras#$'\n'}"; done
-    while [[ "$extras" == *$'\n' ]]; do extras="${extras%$'\n'}"; done
   fi
 
   local repo_dir
@@ -57,14 +56,18 @@ setup_zshrc() {
 
   tmp_file="$(mktemp)"
   sed "s|__ONEQIT_CONFIG__|$repo_dir|g" "$_ZSH_DIR/.zshrc" > "$tmp_file"
-  if [[ -n "$extras" ]]; then
-    printf '%s\n' "$extras" >> "$tmp_file"
-  fi
 
-  if [[ -f "$zshrc" ]] && cmp -s "$tmp_file" "$zshrc"; then
+  # 템플릿 영역(Extras 이전)만 비교 — 사용자 Extras 변경으로 불필요한 백업 방지
+  local template_lines
+  template_lines=$(wc -l < "$tmp_file")
+  if [[ -f "$zshrc" ]] && head -n "$template_lines" "$zshrc" | cmp -s "$tmp_file" -; then
     rm -f "$tmp_file"
     success ".zshrc 변경 없음 → 스킵"
     return
+  fi
+
+  if [[ -n "$extras" ]]; then
+    printf '%s\n' "$extras" >> "$tmp_file"
   fi
 
   if [[ -f "$zshrc" ]]; then
