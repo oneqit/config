@@ -15,22 +15,32 @@ tK() { _tmux_env; tmux kill-server "$@"; }
 # For servers without tmux-256color terminfo (e.g. CentOS 7)
 alias ssh-old='TERM=xterm ssh'
 
-qode() {
+# _tmux_split cmd_left cmd_right [cmd_right_bottom]
+_tmux_split() {
   _tmux_env
-  local cmd1="${1:-nvim}"
-  local cmd2="${2:-claude}"
+  local cmd1="$1" cmd2="$2" cmd3="$3"
+  local right_cmds=(
+    send-keys "$cmd2" C-m \;
+  )
+  local select_left=(select-pane -L)
+  if [[ -n "$cmd3" ]]; then
+    right_cmds+=(split-window -v -l 50% \; send-keys "$cmd3" C-m \;)
+    select_left=(select-pane -t '{left}')
+  fi
   if [[ -n "$TMUX" ]]; then
-    # Already inside tmux: split current window
-    tmux split-window -h -l 40% \; \
-      send-keys "$cmd2" C-m \; \
-      select-pane -L \; \
+    tmux split-window -h -l 50% \; \
+      "${right_cmds[@]}" \
+      "${select_left[@]}" \; \
       send-keys "$cmd1" C-m
   else
-    # Outside tmux: create new session
     tmux new-session \; \
       send-keys "$cmd1" C-m \; \
-      split-window -h -l 40% \; \
-      send-keys "$cmd2" C-m \; \
-      select-pane -L
+      split-window -h -l 50% \; \
+      "${right_cmds[@]}" \
+      "${select_left[@]}"
   fi
 }
+
+qlaude() { _tmux_split "${1:-nvim}" "${2:-claude}"; }
+qodex()  { _tmux_split "${1:-nvim}" "${2:-codex}"; }
+qode()   { _tmux_split "${1:-nvim}" "${2:-claude}" "${3:-codex}"; }
