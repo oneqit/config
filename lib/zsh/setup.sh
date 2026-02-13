@@ -46,7 +46,10 @@ setup_zshrc() {
   local tmp_file
 
   if [[ -f "$zshrc" ]]; then
-    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3 | sed '/./,$!d')
+    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3)
+    # leading/trailing 빈 줄 제거
+    while [[ "$extras" == $'\n'* ]]; do extras="${extras#$'\n'}"; done
+    while [[ "$extras" == *$'\n' ]]; do extras="${extras%$'\n'}"; done
   fi
 
   local repo_dir
@@ -55,7 +58,7 @@ setup_zshrc() {
   tmp_file="$(mktemp)"
   sed "s|__ONEQIT_CONFIG__|$repo_dir|g" "$_ZSH_DIR/.zshrc" > "$tmp_file"
   if [[ -n "$extras" ]]; then
-    printf '\n%s\n' "$extras" >> "$tmp_file"
+    printf '%s\n' "$extras" >> "$tmp_file"
   fi
 
   if [[ -f "$zshrc" ]] && cmp -s "$tmp_file" "$zshrc"; then
