@@ -73,18 +73,18 @@ install_packages() {
 #  폰트 설치
 # ───────────────────────────────────────────────────────
 install_font() {
-  local font_name="CaskaydiaCoveNerdFont-Regular"
+  local font_name="CaskaydiaMonoNerdFont-Regular"
   local src="$HOME/.termux/.font-origin.ttf"
   local dst="$HOME/.termux/font.ttf"
-  local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.zip"
+  local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaMono.zip"
 
   if [[ ! -f "$src" ]]; then
     local tmp_dir
     tmp_dir="$(mktemp -d)"
 
-    info "CaskaydiaCove Nerd Font 다운로드 중..."
-    curl -fsSL -o "$tmp_dir/CascadiaCode.zip" "$url"
-    unzip -qo "$tmp_dir/CascadiaCode.zip" "${font_name}.ttf" -d "$tmp_dir"
+    info "CaskaydiaMono Nerd Font 다운로드 중..."
+    curl -fsSL -o "$tmp_dir/CascadiaMono.zip" "$url"
+    unzip -qo "$tmp_dir/CascadiaMono.zip" "${font_name}.ttf" -d "$tmp_dir"
 
     mkdir -p "$HOME/.termux"
     cp "$tmp_dir/${font_name}.ttf" "$src"
@@ -163,7 +163,7 @@ main() {
   echo -e "  설치된 구성:"
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
-  echo -e "    폰트     → CaskaydiaCove Nerd Font"
+  echo -e "    폰트     → CaskaydiaMono Nerd Font"
   echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
