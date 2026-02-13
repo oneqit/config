@@ -19,7 +19,7 @@ deploy_config() {
     cp "$dst" "${dst}.backup.$(date +%Y%m%d%H%M%S)"
   fi
 
-  info "$label 설정 중..."
+  info "$label 적용 중..."
   cp "$src" "$dst"
-  success "$label 완료 → \"$dst\""
+  success "$label 적용 완료 → \"$dst\""
 }

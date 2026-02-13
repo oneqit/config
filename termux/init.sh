@@ -91,7 +91,7 @@ install_font() {
     rm -rf "$tmp_dir"
   fi
 
-  deploy_config "CaskaydiaCove Nerd Font 폰트" "$src" "$dst"
+  deploy_config "Nerd Font" "$src" "$dst"
 }
 
 # ───────────────────────────────────────────────────────
