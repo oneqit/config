@@ -8,6 +8,8 @@ source "$REPO_DIR/lib/zsh/setup.sh"
 source "$REPO_DIR/lib/starship/setup.sh"
 source "$REPO_DIR/lib/tmux/setup.sh"
 source "$REPO_DIR/lib/deploy.sh"
+source "$REPO_DIR/lib/ai/claude-code/setup.sh"
+source "$REPO_DIR/lib/ai/codex/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  패키지 업데이트
@@ -56,6 +58,7 @@ install_packages() {
     starship
     lazygit
     unzip
+    nodejs
   )
 
   for pkg_name in "${packages[@]}"; do
@@ -158,6 +161,10 @@ main() {
   section "tmux"
   setup_tmux
 
+  section "AI CLI"
+  install_claude_code
+  install_codex
+
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
   echo -e "${GREEN}  ✔ 세팅 완료!${NC}"
@@ -167,7 +174,8 @@ main() {
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
   echo -e "    폰트     → CaskaydiaMono Nerd Font"
-  echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit"
+  echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit, nodejs"
+  echo -e "    AI CLI   → Claude Code, Codex CLI"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
   echo -e "  ${YELLOW}※ 일부 설정은 Termux 앱 재시작 후 반영됩니다.${NC}"

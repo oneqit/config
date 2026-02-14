@@ -10,6 +10,8 @@ source "$REPO_DIR/lib/starship/setup.sh"
 source "$REPO_DIR/lib/tmux/setup.sh"
 source "$REPO_DIR/lib/ghostty/setup.sh"
 source "$REPO_DIR/lib/karabiner/setup.sh"
+source "$REPO_DIR/lib/ai/claude-code/setup.sh"
+source "$REPO_DIR/lib/ai/codex/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Homebrew 설치
@@ -195,6 +197,10 @@ main() {
   section "tmux"
   setup_tmux
 
+  section "AI CLI"
+  install_claude_code
+  install_codex
+
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
   echo -e "${GREEN}  ✔ 세팅 완료!${NC}"
@@ -208,6 +214,7 @@ main() {
   echo -e "    앱       → Rectangle, Scroll Reverser"
   echo -e "    CLI 도구 → git-flow-avh, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
+  echo -e "    AI CLI   → Claude Code, Codex CLI"
   echo -e "    키보드   → 키 반복 입력, 한영 백틱(\`), Karabiner (⌥R/⌘R→F18)"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""

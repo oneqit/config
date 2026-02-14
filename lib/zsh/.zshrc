@@ -13,6 +13,9 @@ elif [[ -d __ONEQIT_CONFIG__ ]]; then
   ONEQIT_CONFIG=__ONEQIT_CONFIG__
 fi
 
+# ─── PATH ───
+export PATH="$HOME/.local/bin:$PATH"
+
 # ─── Platform-specific ───
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
