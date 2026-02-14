@@ -219,9 +219,11 @@ main() {
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
   echo -e "  ${YELLOW}[!] 수동 설정 필요:${NC}"
+  echo -e "    다음 앱을 실행하여 필요한 접근 권한 설정:"
+  echo -e "      Scroll Reverser, Karabiner-Elements, Ghostty, Rectangle"
   echo -e "    Scroll Reverser → 로그인 시 시작"
   echo -e "    시스템 설정 → 키보드 → 키보드 단축키 → 입력 소스"
-  echo -e "      → \"다음 입력 소스 선택\" 단축키를 F18로 변경"
+  echo -e "      → \"이전 입력 소스 선택\" 단축키를 F18로 변경"
   echo ""
 }
 
