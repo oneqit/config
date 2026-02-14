@@ -4,9 +4,31 @@
 
 ## 설치
 
+### HTTPS
 ```bash
 git clone https://github.com/oneqit/config.git ~/.config/oneqit/config
 ```
+
+### SSH
+1. 키 생성
+    ```bash
+    ssh-keygen -t ed25519 -C "<name>@<device-name>"
+    ```
+
+2. GitHub 설정에 공개키 등록 (`Settings > SSH and GPG keys > New SSH key`)
+    1. macOS
+        ```bash
+        cat ~/.ssh/id_ed25519.pub | pbcopy
+        ```
+    2. Linux
+        ```bash
+        cat ~/.ssh/id_ed25519.pub | xclip -selection clipboard
+        ```
+
+3. clone
+    ```bash
+    git clone git@github.com:oneqit/config.git ~/.config/oneqit/config
+    ```
 
 ## 사용법
 
