@@ -221,9 +221,12 @@ main() {
   echo -e "  ${YELLOW}[!] 수동 설정 필요:${NC}"
   echo -e "    다음 앱을 실행하여 필요한 접근 권한 설정:"
   echo -e "      Scroll Reverser, Karabiner-Elements, Ghostty, Rectangle"
-  echo -e "    Scroll Reverser → 로그인 시 시작"
-  echo -e "    시스템 설정 → 키보드 → 키보드 단축키 → 입력 소스"
-  echo -e "      → \"이전 입력 소스 선택\" 단축키를 F18로 변경"
+  echo -e "    Scroll Reverser → 활성화, 로그인 시 시작"
+  echo -e "    Rectangle → 로그인 시 실행, 메뉴 막대 아이콘 숨김"
+  echo -e "    시스템 설정 → 키보드"
+  echo -e "      → 키 반복 속도, 반복 지연 시간 조정"
+  echo -e "      → 키보드 단축키 → 입력 소스 → 이전 입력 소스 → F18로 변경"
+  echo -e "      → 텍스트 입력 설정 조정"
   echo ""
 }
 
