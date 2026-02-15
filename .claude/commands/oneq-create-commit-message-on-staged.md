@@ -4,3 +4,6 @@
 ```
 git diff --staged
 ```
+
+기존 commit 메시지를 참고하여 형식을 유지해줘
+
