@@ -38,22 +38,25 @@ setup_karabiner_config() {
     dst = JSON.parse(File.read(ARGV[1]))
 
     profile = dst.dig("profiles", 0) || {}
-    rules = profile.dig("complex_modifications", "rules") || []
+    profile["complex_modifications"] ||= {}
+    profile["complex_modifications"]["rules"] ||= []
 
-    if rules.any?
+    existing = profile["complex_modifications"]["rules"].map { |r| r["description"] }
+    src_rules = src.dig("profiles", 0, "complex_modifications", "rules") || []
+    new_rules = src_rules.reject { |r| existing.include?(r["description"]) }
+
+    if new_rules.empty?
       puts "SKIP"
     else
-      src_rules = src.dig("profiles", 0, "complex_modifications", "rules") || []
-      profile["complex_modifications"] ||= {}
-      profile["complex_modifications"]["rules"] = src_rules
+      profile["complex_modifications"]["rules"] = new_rules + profile["complex_modifications"]["rules"]
       File.write(ARGV[1], JSON.pretty_generate(dst) + "\n")
-      puts "MERGED"
+      puts new_rules.map { |r| r["description"] }.join(", ")
     end
   ' "$src" "$dst")
 
   case "$result" in
-    SKIP)   success "Karabiner complex_modifications 이미 설정됨 → 스킵" ;;
-    MERGED) success "Karabiner complex_modifications 머지 완료" ;;
+    SKIP) success "Karabiner complex_modifications 이미 최신 → 스킵" ;;
+    *)    success "Karabiner complex_modifications 추가: $result" ;;
   esac
 }
 

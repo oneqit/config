@@ -24,5 +24,6 @@ setup_ghostty_config() {
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  install_ghostty
   setup_ghostty_config
 fi
