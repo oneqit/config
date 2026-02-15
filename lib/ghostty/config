@@ -31,8 +31,6 @@ keybind = global:ctrl+grave_accent=toggle_quick_terminal
 keybind = global:alt+space=toggle_visibility
 
 # ─── 퀵 터미널 ───
-quick-terminal-position = right
-quick-terminal-size = 50%
 quick-terminal-space-behavior = remain
 quick-terminal-animation-duration = 0
 
