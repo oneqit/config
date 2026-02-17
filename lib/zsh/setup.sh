@@ -67,7 +67,7 @@ setup_zshrc() {
   fi
 
   if [[ -n "$extras" ]]; then
-    printf '%s\n' "$extras" >> "$tmp_file"
+    printf '%s\n\n' "$extras" >> "$tmp_file"
   fi
 
   if [[ -f "$zshrc" ]]; then
