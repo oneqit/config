@@ -4,7 +4,13 @@
 
 # ─── Common ───
 export LANG=ko_KR.UTF-8
-command -v vim &>/dev/null && export EDITOR=vim
+if command -v nvim &>/dev/null; then
+  export EDITOR=nvim
+elif command -v vim &>/dev/null; then
+  export EDITOR=vim
+else
+  export EDITOR=vi
+fi
 
 # ─── Config repo ───
 if [[ -d ~/.config/oneqit/config ]]; then
