@@ -196,6 +196,7 @@ main() {
 
   section "tmux"
   setup_tmux
+  setup_tmux_im_status
 
   section "AI CLI"
   install_claude_code

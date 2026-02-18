@@ -48,4 +48,5 @@ setup_claude_commands() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   install_claude_code
+  setup_claude_commands
 fi
