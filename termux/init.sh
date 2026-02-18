@@ -2,31 +2,14 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE_DIR="$SCRIPT_DIR/templates"
-
-# ───────────────────────────────────────────────────────
-#  색상 정의
-# ───────────────────────────────────────────────────────
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-info()    { echo -e "  ${BLUE}[i]${NC} $1"; }
-success() { echo -e "  ${GREEN}[✔]${NC} $1"; }
-warn()    { echo -e "  ${YELLOW}[!]${NC} $1"; }
-error()   { echo -e "  ${RED}[✘]${NC} $1"; exit 1; }
-section() { echo ""; echo -e "${BLUE}── $1${NC}"; }
-
-# ───────────────────────────────────────────────────────
-#  Termux 환경 확인
-# ───────────────────────────────────────────────────────
-ensure_termux() {
-  if [[ -z "${PREFIX:-}" || "${PREFIX}" != "/data/data/com.termux/files/usr" ]]; then
-    error "이 스크립트는 Termux 환경에서 실행해야 합니다"
-  fi
-}
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+source "$REPO_DIR/lib/platform.sh"
+source "$REPO_DIR/lib/zsh/setup.sh"
+source "$REPO_DIR/lib/starship/setup.sh"
+source "$REPO_DIR/lib/tmux/setup.sh"
+source "$REPO_DIR/lib/deploy.sh"
+source "$REPO_DIR/lib/ai/claude-code/setup.sh"
+source "$REPO_DIR/lib/ai/codex/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  패키지 업데이트
@@ -74,6 +57,8 @@ install_packages() {
     ripgrep
     starship
     lazygit
+    unzip
+    nodejs
   )
 
   for pkg_name in "${packages[@]}"; do
@@ -88,95 +73,31 @@ install_packages() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Oh My Zsh 설치
+#  폰트 설치
 # ───────────────────────────────────────────────────────
-install_oh_my_zsh() {
-  local omz_dir="$HOME/.oh-my-zsh"
+install_font() {
+  local font_name="CaskaydiaMonoNerdFont-Regular"
+  local dst="$HOME/.termux/font.ttf"
+  local url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaMono.zip"
 
-  if [[ -d "$omz_dir" ]]; then
-    success "Oh My Zsh 이미 설치됨"
-  else
-    info "Oh My Zsh 설치 중..."
-    RUNZSH=no CHSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    success "Oh My Zsh 설치 완료"
+  local url_hash
+  url_hash="$(printf '%s' "$url" | md5sum | cut -d' ' -f1)"
+  local src="$HOME/.termux/.font-${font_name}-${url_hash}.ttf"
+
+  if [[ ! -f "$src" ]]; then
+    local tmp_dir
+    tmp_dir="$(mktemp -d)"
+
+    info "CaskaydiaMono Nerd Font 다운로드 중..."
+    curl -fsSL -o "$tmp_dir/CascadiaMono.zip" "$url"
+    unzip -qo "$tmp_dir/CascadiaMono.zip" "${font_name}.ttf" -d "$tmp_dir"
+
+    mkdir -p "$HOME/.termux"
+    cp "$tmp_dir/${font_name}.ttf" "$src"
+    rm -rf "$tmp_dir"
   fi
 
-  local plugins=(
-    zsh-users/zsh-autosuggestions
-    zsh-users/zsh-syntax-highlighting
-    zsh-users/zsh-completions
-  )
-
-  for repo in "${plugins[@]}"; do
-    local name="${repo##*/}"
-    local dir="${ZSH_CUSTOM:-$omz_dir/custom}/plugins/$name"
-    if [[ -d "$dir" ]]; then
-      success "$name 이미 설치됨"
-    else
-      info "$name 설치 중..."
-      git clone "https://github.com/$repo" "$dir"
-      success "$name 설치 완료"
-    fi
-  done
-}
-
-# ───────────────────────────────────────────────────────
-#  .zshrc 설정
-# ───────────────────────────────────────────────────────
-setup_zshrc() {
-  local zshrc="$HOME/.zshrc"
-  local extras=""
-  local extras_marker="#  Extras"
-  local tmp_file
-
-  if [[ -f "$zshrc" ]]; then
-    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3 | sed '/./,$!d')
-  fi
-
-  tmp_file="$(mktemp)"
-  cp "$TEMPLATE_DIR/.zshrc" "$tmp_file"
-  if [[ -n "$extras" ]]; then
-    printf '\n%s\n' "$extras" >> "$tmp_file"
-  fi
-
-  if [[ -f "$zshrc" ]] && cmp -s "$tmp_file" "$zshrc"; then
-    rm -f "$tmp_file"
-    success ".zshrc 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$zshrc" ]]; then
-    warn ".zshrc 이미 존재 → 백업"
-    cp "$zshrc" "${zshrc}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info ".zshrc 생성 중..."
-  mv "$tmp_file" "$zshrc"
-  success ".zshrc 설정 완료 → \"$zshrc\""
-}
-
-# ───────────────────────────────────────────────────────
-#  Starship 설정
-# ───────────────────────────────────────────────────────
-setup_starship_config() {
-  local config_dir="$HOME/.config"
-  local config_file="$config_dir/starship.toml"
-
-  mkdir -p "$config_dir"
-
-  if [[ -f "$config_file" ]] && cmp -s "$TEMPLATE_DIR/starship.toml" "$config_file"; then
-    success "Starship 설정 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$config_file" ]]; then
-    warn "starship.toml 이미 존재 → 백업 후 덮어쓰기"
-    cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info "Starship 설정 파일 생성 중..."
-  cp "$TEMPLATE_DIR/starship.toml" "$config_file"
-  success "Starship 설정 완료 → \"$config_file\""
+  deploy_config "Nerd Font" "$src" "$dst"
 }
 
 # ───────────────────────────────────────────────────────
@@ -207,14 +128,13 @@ change_shell_to_zsh() {
 #  메인 실행
 # ───────────────────────────────────────────────────────
 main() {
+  ensure_termux
+
   echo ""
   echo -e "${BLUE}═══════════════════════════════════════════${NC}"
   echo -e "${BLUE}  Termux 환경 초기 세팅${NC}"
   echo -e "${BLUE}═══════════════════════════════════════════${NC}"
   echo ""
-
-  section "환경 확인"
-  ensure_termux
 
   section "패키지 업데이트"
   update_packages
@@ -232,8 +152,18 @@ main() {
   section "Starship"
   setup_starship_config
 
+  section "폰트"
+  install_font
+
   section "셸 기본값"
   change_shell_to_zsh
+
+  section "tmux"
+  setup_tmux
+
+  section "AI CLI"
+  install_claude_code
+  install_codex
 
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
@@ -243,7 +173,10 @@ main() {
   echo -e "  설치된 구성:"
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
-  echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit"
+  echo -e "    폰트     → CaskaydiaMono Nerd Font"
+  echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit, nodejs"
+  echo -e "    AI CLI   → Claude Code, Codex CLI"
+  echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
   echo -e "  ${YELLOW}※ 일부 설정은 Termux 앱 재시작 후 반영됩니다.${NC}"
   echo ""

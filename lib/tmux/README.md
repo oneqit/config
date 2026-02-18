@@ -64,6 +64,14 @@ exec $SHELL
 | `C-y` | 위로 스크롤 |
 | `q` / `ㅂ` | copy-mode 종료 |
 
+## 입력기 상태 표시 (macOS 전용)
+
+상태바 우측에 현재 입력기(한/EN)를 표시한다. 한글 입력 중에는 `[한]`과 함께 배경색이 변경되고, 영문 입력 중에는 `[EN]`이 기본 스타일로 표시된다.
+
+- `tmux-im-status.swift` — macOS 입력 소스 변경을 감지하여 tmux 변수(`@im-status`)와 `status-style`을 업데이트하는 Swift 데몬
+- `com.oneq.tmux-im-status.plist` — launchd로 데몬을 자동 실행하는 설정
+- `setup_tmux_im_status` 함수가 컴파일, plist 배포, 서비스 등록을 처리
+
 ## 기타 설정
 
 | 설정 | 설명 |

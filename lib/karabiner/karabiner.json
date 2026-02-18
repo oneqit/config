@@ -1,0 +1,33 @@
+{
+  "global": { "show_in_menu_bar": false },
+  "profiles": [
+    {
+      "name": "Default profile",
+      "selected": true,
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "right_option → F18 (VMware Horizon, Moonlight 제외)",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.omnissa\\.horizon\\.client\\.mac$",
+                      "^com\\.moonlight\\-stream\\.Moonlight$"
+                    ],
+                    "type": "frontmost_application_unless"
+                  }
+                ],
+                "from": { "key_code": "right_option" },
+                "to": [{ "key_code": "f18" }],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
+    }
+  ]
+}

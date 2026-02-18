@@ -1,23 +1,17 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE_DIR="$SCRIPT_DIR/templates"
-
-# ───────────────────────────────────────────────────────
-#  색상 정의
-# ───────────────────────────────────────────────────────
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
-
-info()    { echo -e "  ${BLUE}[i]${NC} $1"; }
-success() { echo -e "  ${GREEN}[✔]${NC} $1"; }
-warn()    { echo -e "  ${YELLOW}[!]${NC} $1"; }
-error()   { echo -e "  ${RED}[✘]${NC} $1"; exit 1; }
-section() { echo "" ; echo -e "${BLUE}── $1${NC}"; }
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+KEYBINDING_DIR="$SCRIPT_DIR/keybinding"
+source "$REPO_DIR/lib/platform.sh"
+source "$REPO_DIR/lib/zsh/setup.sh"
+source "$REPO_DIR/lib/starship/setup.sh"
+source "$REPO_DIR/lib/tmux/setup.sh"
+source "$REPO_DIR/lib/ghostty/setup.sh"
+source "$REPO_DIR/lib/karabiner/setup.sh"
+source "$REPO_DIR/lib/ai/claude-code/setup.sh"
+source "$REPO_DIR/lib/ai/codex/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Homebrew 설치
@@ -44,25 +38,26 @@ install_homebrew() {
 #  패키지 설치
 # ───────────────────────────────────────────────────────
 install_packages() {
-  info "패키지 설치 중..."
-
+  # brew패키지:커맨드명
   local packages=(
-    git           # 버전 관리
-    git-flow-avh  # Git 브랜치 워크플로우
-    neovim        # 텍스트 에디터
-    tmux          # 세션/분할 관리
-    starship      # 프롬프트
-    ripgrep       # 빠른 검색 (rg)
-    btop          # 시스템 모니터링
-    lazygit       # Git TUI
-    lazydocker    # Docker TUI
-    k9s           # Kubernetes TUI
-    colima        # docker 컨테이너 런타임
-    docker-credential-helper  # colima + Docker 자격증명 관리
+    "git:git"
+    "git-flow-avh:git-flow"
+    "neovim:nvim"
+    "tmux:tmux"
+    "starship:starship"
+    "ripgrep:rg"
+    "btop:btop"
+    "lazygit:lazygit"
+    "lazydocker:lazydocker"
+    "k9s:k9s"
+    "colima:colima"
+    "docker-credential-helper:docker-credential-osxkeychain"
   )
 
-  for pkg in "${packages[@]}"; do
-    if brew list "$pkg" &>/dev/null; then
+  for entry in "${packages[@]}"; do
+    local pkg="${entry%%:*}"
+    local cmd="${entry#*:}"
+    if command -v "$cmd" &>/dev/null; then
       success "$pkg 이미 설치됨"
     else
       info "$pkg 설치 중..."
@@ -77,7 +72,7 @@ install_packages() {
 # ───────────────────────────────────────────────────────
 install_font() {
   local fonts=(
-    font-caskaydia-cove-nerd-font
+    font-caskaydia-mono-nerd-font
     font-noto-sans-mono-cjk-kr
   )
 
@@ -93,161 +88,72 @@ install_font() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Ghostty 설치
+#  앱 설치
 # ───────────────────────────────────────────────────────
-install_ghostty() {
-  if brew list --cask ghostty &>/dev/null; then
-    success "Ghostty 이미 설치됨"
-  else
-    info "Ghostty 설치 중..."
-    brew install --cask ghostty
-    success "Ghostty 설치 완료"
-  fi
-}
-
-# ───────────────────────────────────────────────────────
-#  Ghostty 설정
-# ───────────────────────────────────────────────────────
-setup_ghostty_config() {
-  local config_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
-  local config_file="$config_dir/config"
-
-  mkdir -p "$config_dir"
-
-  if [[ -f "$config_file" ]] && cmp -s "$TEMPLATE_DIR/ghostty.config" "$config_file"; then
-    success "Ghostty 설정 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$config_file" ]]; then
-    warn "Ghostty 설정 파일 이미 존재 → 백업 후 덮어쓰기"
-    cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info "Ghostty 설정 파일 생성 중..."
-
-  cp "$TEMPLATE_DIR/ghostty.config" "$config_file"
-
-  success "Ghostty 설정 완료 → \"$config_file\""
-}
-
-# ───────────────────────────────────────────────────────
-#  Oh My Zsh 설치
-# ───────────────────────────────────────────────────────
-install_oh_my_zsh() {
-  local omz_dir="$HOME/.oh-my-zsh"
-
-  if [[ -d "$omz_dir" ]]; then
-    success "Oh My Zsh 이미 설치됨"
-  else
-    info "Oh My Zsh 설치 중..."
-    RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-    success "Oh My Zsh 설치 완료"
-  fi
-
-  local plugins=(
-    zsh-users/zsh-autosuggestions
-    zsh-users/zsh-syntax-highlighting
-    zsh-users/zsh-completions
+install_apps() {
+  # cask명:앱이름
+  local apps=(
+    "rectangle:Rectangle"
+    "scroll-reverser:Scroll Reverser"
   )
 
-  for repo in "${plugins[@]}"; do
-    local name="${repo##*/}"
-    local dir="${ZSH_CUSTOM:-$omz_dir/custom}/plugins/$name"
-    if [[ ! -d "$dir" ]]; then
-      git clone "https://github.com/$repo" "$dir"
+  for entry in "${apps[@]}"; do
+    local cask="${entry%%:*}"
+    local app_name="${entry#*:}"
+    if [[ -d "/Applications/$app_name.app" ]] || brew list --cask "$cask" &>/dev/null; then
+      success "$app_name 이미 설치됨"
+    else
+      info "$app_name 설치 중..."
+      brew install --cask "$cask"
+      success "$app_name 설치 완료"
     fi
   done
 }
 
 # ───────────────────────────────────────────────────────
-#  .zshrc 설정
+#  macOS 기본 설정
 # ───────────────────────────────────────────────────────
-setup_zshrc() {
-  local zshrc="$HOME/.zshrc"
-
-  # 기존 .zshrc에서 Extras 섹션 아래 사용자 설정 추출
-  local extras=""
-  if [[ -f "$zshrc" ]]; then
-    local extras_marker="#  Extras"
-    extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3 | sed '/./,$!d')
-  fi
-
-  if [[ -f "$zshrc" ]] && cmp -s <(printf '%s' "$(cat "$zshrc")") <(printf '%s' "$(cat "$TEMPLATE_DIR/.zshrc"; [[ -n "$extras" ]] && echo "$extras")"); then
-    success ".zshrc 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$zshrc" ]]; then
-    warn ".zshrc 이미 존재 → 백업"
-    cp "$zshrc" "${zshrc}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info ".zshrc 생성 중..."
-
-  cp "$TEMPLATE_DIR/.zshrc" "$zshrc"
-
-  # Extras 섹션 아래 사용자 설정 복원
-  if [[ -n "$extras" ]]; then
-    printf '%s\n\n' "$extras" >> "$zshrc"
-    success ".zshrc 설정 완료 → \"$zshrc\" (Extras 설정 유지됨)"
+setup_macos_defaults() {
+  if [[ "$(defaults read -g ApplePressAndHoldEnabled 2>/dev/null)" == "0" ]]; then
+    success "키 반복 입력 이미 활성화됨"
   else
-    success ".zshrc 설정 완료 → \"$zshrc\""
+    info "키 반복 입력 활성화..."
+    defaults write -g ApplePressAndHoldEnabled -bool false
+    success "키 반복 입력 활성화 완료"
   fi
 }
 
 # ───────────────────────────────────────────────────────
-#  Starship 설정
+#  Scroll Reverser 설정
 # ───────────────────────────────────────────────────────
-setup_starship_config() {
-  local config_file="$HOME/.config/starship.toml"
-
-  if [[ -f "$config_file" ]] && cmp -s "$TEMPLATE_DIR/starship.toml" "$config_file"; then
-    success "Starship 설정 변경 없음 → 스킵"
-    return
+setup_scroll_reverser() {
+  local sr="com.pilotmoon.scroll-reverser"
+  if [[ "$(defaults read "$sr" ReverseMouse 2>/dev/null)" == "1" ]]; then
+    success "Scroll Reverser 이미 설정됨"
+  else
+    info "Scroll Reverser 설정 중..."
+    defaults write "$sr" ReverseMouse -bool true
+    defaults write "$sr" ReverseTrackpad -bool false
+    defaults write "$sr" ReverseX -bool true
+    defaults write "$sr" ReverseY -bool true
+    defaults write "$sr" HideIcon -bool true
+    success "Scroll Reverser 설정 완료 (마우스 수평/수직 반전, 아이콘 숨김)"
   fi
-
-  if [[ -f "$config_file" ]]; then
-    warn "starship.toml 이미 존재 → 백업 후 덮어쓰기"
-    cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info "Starship 설정 파일 생성 중..."
-
-  cp "$TEMPLATE_DIR/starship.toml" "$config_file"
-
-  success "Starship 설정 완료 → \"$config_file\""
 }
 
 # ───────────────────────────────────────────────────────
 #  한영 키보드 백틱(`) 입력 설정
 # ───────────────────────────────────────────────────────
 setup_keybinding() {
-  local keybinding_dir="$HOME/Library/KeyBindings"
-  local keybinding_file="$keybinding_dir/DefaultkeyBinding.dict"
-
-  if [[ -f "$keybinding_file" ]] && cmp -s "$TEMPLATE_DIR/DefaultkeyBinding.dict" "$keybinding_file"; then
-    success "백틱 설정 변경 없음 → 스킵"
-    return
-  fi
-
-  if [[ -f "$keybinding_file" ]]; then
-    warn "DefaultkeyBinding.dict 이미 존재 → 백업 후 덮어쓰기"
-    cp "$keybinding_file" "${keybinding_file}.backup.$(date +%Y%m%d%H%M%S)"
-  fi
-
-  info "한영 키보드 백틱 설정 중..."
-
-  mkdir -p "$keybinding_dir"
-  cp "$TEMPLATE_DIR/DefaultkeyBinding.dict" "$keybinding_file"
-
-  success "백틱 설정 완료 → \"$keybinding_file\" (앱 재시작 후 적용)"
+  deploy_config "백틱 설정" "$KEYBINDING_DIR/DefaultkeyBinding.dict" "$HOME/Library/KeyBindings/DefaultkeyBinding.dict"
 }
 
 # ───────────────────────────────────────────────────────
 #  메인 실행
 # ───────────────────────────────────────────────────────
 main() {
+  ensure_macos
+
   echo ""
   echo -e "${BLUE}═══════════════════════════════════════════${NC}"
   echo -e "${BLUE}  macOS 환경 초기 세팅${NC}"
@@ -263,6 +169,20 @@ main() {
   section "폰트"
   install_font
 
+  section "앱"
+  install_apps
+
+  section "마우스"
+  setup_scroll_reverser
+
+  section "키보드"
+  setup_macos_defaults
+  setup_keybinding
+
+  section "Karabiner"
+  install_karabiner
+  setup_karabiner_config
+
   section "Ghostty"
   install_ghostty
   setup_ghostty_config
@@ -274,8 +194,15 @@ main() {
   section "Starship"
   setup_starship_config
 
-  section "키보드"
-  setup_keybinding
+  section "tmux"
+  setup_tmux
+  setup_tmux_im_status
+
+  section "AI CLI"
+  install_claude_code
+  setup_claude_commands
+  install_codex
+
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
   echo -e "${GREEN}  ✔ 세팅 완료!${NC}"
@@ -285,11 +212,23 @@ main() {
   echo -e "    터미널   → Ghostty"
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
-  echo -e "    폰트     → CaskaydiaCove Nerd Font, Noto Sans Mono CJK KR"
+  echo -e "    폰트     → CaskaydiaMono Nerd Font, Noto Sans Mono CJK KR"
+  echo -e "    앱       → Rectangle, Scroll Reverser"
   echo -e "    CLI 도구 → git-flow-avh, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
-  echo -e "    키보드   → 한영 백틱(\`) 설정"
+  echo -e "    AI CLI   → Claude Code, Codex CLI"
+  echo -e "    키보드   → 키 반복 입력, 한영 백틱(\`), Karabiner (⌥R→F18)"
+  echo -e "    tmux     → 설정 + 셸 함수"
+  echo ""
+  echo -e "  ${YELLOW}[!] 수동 설정 필요:${NC}"
+  echo -e "    Scroll Reverser → 활성화, 로그인 시 시작"
+  echo -e "    Karabiner → Simple Modifications에서 right_command → F18 추가"
+  echo -e "    Rectangle → 로그인 시 실행, 메뉴 막대 아이콘 숨김"
+  echo -e "    시스템 설정 → 키보드"
+  echo -e "      → 키 반복 속도, 반복 지연 시간 조정"
+  echo -e "      → 키보드 단축키 → 입력 소스 → 이전 입력 소스 → F18로 변경"
+  echo -e "      → 텍스트 입력 설정 조정"
   echo ""
 }
 
-main
+main "$@"

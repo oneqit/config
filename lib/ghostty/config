@@ -3,7 +3,7 @@
 # ═══════════════════════════════════════
 
 # ─── 폰트 ───
-font-family = CaskaydiaCove Nerd Font
+font-family = CaskaydiaMono Nerd Font
 font-codepoint-map = U+AC00-U+D7AF=Noto Sans Mono CJK KR
 font-codepoint-map = U+1100-U+11FF=Noto Sans Mono CJK KR
 font-codepoint-map = U+3130-U+318F=Noto Sans Mono CJK KR
@@ -29,6 +29,10 @@ shell-integration-features = no-cursor
 keybind = shift+enter=text:\n
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 keybind = global:alt+space=toggle_visibility
+
+# ─── 퀵 터미널 ───
+quick-terminal-space-behavior = remain
+quick-terminal-animation-duration = 0
 
 # ─── 기타 ───
 copy-on-select = clipboard
