@@ -22,23 +22,31 @@ setup_tmux_im_status() {
   local service_label="com.oneq.tmux-im-status"
 
   # 컴파일
-  mkdir -p "$bin_dir"
-  info "tmux-im-status 컴파일 중..."
-  swiftc "$swift_src" -o "$bin_path"
-  success "tmux-im-status 컴파일 완료 → \"$bin_path\""
+  if [[ -x "$bin_path" ]]; then
+    success "tmux-im-status 이미 컴파일됨 → 스킵"
+  else
+    mkdir -p "$bin_dir"
+    info "tmux-im-status 컴파일 중..."
+    swiftc "$swift_src" -o "$bin_path"
+    success "tmux-im-status 컴파일 완료 → \"$bin_path\""
+  fi
 
   # plist 배포 (__HOME__ → $HOME 치환)
-  mkdir -p "$(dirname "$plist_dst")"
-  sed "s|__HOME__|$HOME|g" "$plist_src" > "$plist_dst"
-  success "plist 배포 완료 → \"$plist_dst\""
+  if [[ -f "$plist_dst" ]]; then
+    success "plist 이미 배포됨 → 스킵"
+  else
+    mkdir -p "$(dirname "$plist_dst")"
+    sed "s|__HOME__|$HOME|g" "$plist_src" > "$plist_dst"
+    success "plist 배포 완료 → \"$plist_dst\""
+  fi
 
   # launchctl 서비스 등록
   if launchctl list "$service_label" &>/dev/null; then
-    info "기존 서비스 언로드 중..."
-    launchctl unload "$plist_dst" 2>/dev/null || true
+    success "tmux-im-status 서비스 이미 로드됨 → 스킵"
+  else
+    launchctl load "$plist_dst"
+    success "tmux-im-status 서비스 로드 완료"
   fi
-  launchctl load "$plist_dst"
-  success "tmux-im-status 서비스 로드 완료"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
