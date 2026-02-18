@@ -2,6 +2,7 @@
 
 format = """
 $time\
+$hostname\
 $directory\
 $git_branch$git_status\
 $c$cpp$rust$golang$nodejs$java$kotlin$python\
@@ -13,6 +14,10 @@ $line_break$character"""
 disabled = false
 time_format = "%T"
 format = '\[[$time]($style)\] '
+
+[hostname]
+ssh_only = true
+format = '[$hostname]($style) '
 
 [directory]
 read_only = " 󰌾"
