@@ -17,6 +17,9 @@ font-size = 12
 adjust-cell-width = -6%
 adjust-cell-height = -3%
 
+# ─── 터미널 ───
+term = xterm-256color
+
 # ─── 스타일 ───
 theme = iTerm2 Tango Dark
 
