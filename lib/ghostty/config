@@ -21,7 +21,7 @@ adjust-cell-height = -3%
 term = xterm-256color
 
 # ─── 스타일 ───
-theme = iTerm2 Tango Dark
+theme = 0x96f
 
 # ─── 커서 ───
 cursor-style = block
