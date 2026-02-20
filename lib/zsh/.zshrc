@@ -4,6 +4,7 @@
 
 # ─── Common ───
 export LANG=ko_KR.UTF-8
+export LC_ALL=ko_KR.UTF-8
 if command -v nvim &>/dev/null; then
   export EDITOR=nvim
 elif command -v vim &>/dev/null; then
