@@ -2,22 +2,18 @@
 
 format = """
 $time\
-$hostname\
 $directory\
 $git_branch$git_status\
 $c$cpp$rust$golang$nodejs$java$kotlin$python\
 $kubernetes\
 $cmd_duration\
-$line_break$character"""
+$line_break\
+${custom.ssh}$character"""
 
 [time]
 disabled = false
 time_format = "%T"
 format = '\[[$time]($style)\] '
-
-[hostname]
-ssh_only = true
-format = '[$hostname]($style) '
 
 [directory]
 read_only = " 󰌾"
@@ -63,3 +59,9 @@ format = '[ $duration]($style) '
 
 [line_break]
 disabled = false
+
+[custom.ssh]
+when = '[ -n "$SSH_CONNECTION" ]'
+command = "echo $SSH_CONNECTION | awk '{print $3}'"
+style = 'bold #ff9e64'
+format = '[󰌘 $output]($style) '
