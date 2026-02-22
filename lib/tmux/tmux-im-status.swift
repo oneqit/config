@@ -12,8 +12,6 @@ func updateTmuxStatus() {
     let style = isKorean
         ? "bg=colour214,fg=colour0"
         : "bg=green,fg=black"
-    let label = isKorean ? "한" : "EN"
-
     let tmux = "/opt/homebrew/bin/tmux"
 
     let setStyle = Process()
@@ -21,9 +19,12 @@ func updateTmuxStatus() {
     setStyle.arguments = ["set", "-g", "status-style", style]
     try? setStyle.run()
 
+    // Use /bin/sh + printf to pass NFC bytes directly,
+    // bypassing Foundation's NFD normalization of Korean characters
+    let label = isKorean ? "$(printf '\\xed\\x95\\x9c')" : "EN"
     let setVar = Process()
-    setVar.executableURL = URL(fileURLWithPath: tmux)
-    setVar.arguments = ["set", "-g", "@im-status", label]
+    setVar.executableURL = URL(fileURLWithPath: "/bin/sh")
+    setVar.arguments = ["-c", "\(tmux) set -g @im-status \"\(label)\""]
     try? setVar.run()
 }
 
