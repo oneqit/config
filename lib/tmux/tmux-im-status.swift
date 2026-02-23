@@ -14,10 +14,17 @@ func updateTmuxStatus() {
         : "bg=green,fg=black"
     let tmux = "/opt/homebrew/bin/tmux"
 
+    let borderFg = isKorean ? "colour214" : "brightgreen"
+
     let setStyle = Process()
     setStyle.executableURL = URL(fileURLWithPath: tmux)
     setStyle.arguments = ["set", "-g", "status-style", style]
     try? setStyle.run()
+
+    let setBorder = Process()
+    setBorder.executableURL = URL(fileURLWithPath: tmux)
+    setBorder.arguments = ["set", "-g", "pane-active-border-style", "fg=\(borderFg)"]
+    try? setBorder.run()
 
     // Use /bin/sh + printf to pass NFC bytes directly,
     // bypassing Foundation's NFD normalization of Korean characters
