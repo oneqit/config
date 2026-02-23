@@ -22,11 +22,7 @@ pkg install tmux
 
 ## 설정 적용
 
-```bash
-ln -sf $PWD/.tmux.conf ~/.tmux.conf
-echo "source $PWD/.zshrc.append" >> ~/.zshrc
-exec $SHELL
-```
+`init.sh` 혹은 `lib/tmux/setup.sh`를 실행하면 `.tmux.conf` 심볼릭 링크와 `.zshrc` 설정이 자동으로 적용된다.
 
 ## 쉘 함수 & Alias
 
