@@ -20,7 +20,7 @@ install_ghostty() {
 #  Ghostty 설정
 # ───────────────────────────────────────────────────────
 setup_ghostty_config() {
-  deploy_config "Ghostty 설정" "$_GHOSTTY_DIR/config" "$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+  deploy_config "Ghostty 설정" "$_GHOSTTY_DIR/config" "$HOME/.config/ghostty/config"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
