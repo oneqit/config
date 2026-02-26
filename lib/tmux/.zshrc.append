@@ -2,7 +2,6 @@
 # tmux
 _tmux_env() {
   export LANG=ko_KR.UTF-8
-  export LC_ALL=ko_KR.UTF-8
 }
 
 t()  { _tmux_env; tmux new "$@"; }              # (Optional) use -s <name>
