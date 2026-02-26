@@ -2,6 +2,7 @@
 
 _TMUX_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$_TMUX_DIR/../deploy.sh"
+source "$_TMUX_DIR/../platform.sh"
 
 # ───────────────────────────────────────────────────────
 #  tmux 설정
@@ -62,5 +63,5 @@ setup_tmux_im_status() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   setup_tmux
-  setup_tmux_im_status
+  is_macos && setup_tmux_im_status
 fi
