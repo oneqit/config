@@ -173,6 +173,7 @@ main() {
 
   section "AI CLI"
   install_claude_code
+  setup_claude_commands
   install_codex
 
   echo ""
