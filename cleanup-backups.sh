@@ -16,6 +16,7 @@ BACKUP_PATTERNS=(
   "$HOME/.tmux.conf.backup."*
   "$HOME/.zshrc.backup."*
   "$HOME/.config/ghostty/config.backup."*
+  "$HOME/Library/Application Support/com.mitchellh.ghostty/config.backup."*
   "$HOME/.claude/commands.backup."*
   "$HOME/.termux/termux.properties.backup."*
   "$HOME/.termux/font.ttf.backup."*
