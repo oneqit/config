@@ -17,7 +17,7 @@ func updateTmuxStatus() {
     let borderFg = isKorean ? "colour214" : "brightgreen"
     let c1 = isKorean ? "colour214" : "green"       // segment 1 (index)
     let c2 = isKorean ? "colour130" : "colour22"    // segment 2 (path)
-    let c3 = isKorean ? "colour166" : "colour23"    // segment 3 (cmd)
+    let c3 = "colour238"                              // segment 3 (cmd)
 
     let setStyle = Process()
     setStyle.executableURL = URL(fileURLWithPath: tmux)
@@ -33,9 +33,9 @@ func updateTmuxStatus() {
     let pw = "\u{E0B0}"       //
     let iIdx = "\u{F489}"     //  (terminal)
     let iDir = "\u{F07B}"     //  (folder)
-    let iCmd = "\u{F120}"     //  (command)
+    let iCmd = "\u{E795}"     //  (command)
     let borderFormat = "#{?pane_active,"
-        + "#[bg=\(c1) fg=black bold] \(iIdx) #{pane_index} "
+        + "#[bg=\(c1) fg=black] \(iIdx) #{pane_index} "
         + "#[bg=\(c2) fg=\(c1) nobold]\(pw)"
         + "#[fg=white] \(iDir) #{pane_current_path} "
         + "#[bg=\(c3) fg=\(c2)]\(pw)"
