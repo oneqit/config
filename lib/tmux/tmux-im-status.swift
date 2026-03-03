@@ -33,7 +33,7 @@ func updateTmuxStatus() {
     let pw = "\u{E0B0}"       //
     let iIdx = "\u{F489}"     //  (terminal)
     let iDir = "\u{F07B}"     //  (folder)
-    let iCmd = "\u{E795}"     //  (command)
+    let iCmd = "\u{F427}"     //  (command)
     let borderFormat = "#{?pane_active,"
         + "#[bg=\(c1) fg=black] \(iIdx) #{pane_index} "
         + "#[bg=\(c2) fg=\(c1) nobold]\(pw)"
