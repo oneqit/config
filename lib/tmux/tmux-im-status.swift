@@ -15,6 +15,9 @@ func updateTmuxStatus() {
     let tmux = "/opt/homebrew/bin/tmux"
 
     let borderFg = isKorean ? "colour214" : "brightgreen"
+    let c1 = isKorean ? "colour214" : "green"       // segment 1 (index)
+    let c2 = isKorean ? "colour130" : "colour22"    // segment 2 (path)
+    let c3 = "colour238"                              // segment 3 (cmd)
 
     let setStyle = Process()
     setStyle.executableURL = URL(fileURLWithPath: tmux)
@@ -25,6 +28,24 @@ func updateTmuxStatus() {
     setBorder.executableURL = URL(fileURLWithPath: tmux)
     setBorder.arguments = ["set", "-g", "pane-active-border-style", "fg=\(borderFg)"]
     try? setBorder.run()
+
+    // Powerline segment style with Nerd Font icons
+    let pw = "\u{E0B0}"       //
+    let iIdx = "\u{F489}"     //  (terminal)
+    let iDir = "\u{F07B}"     //  (folder)
+    let iCmd = "\u{E795}"     //  (command)
+    let borderFormat = "#{?pane_active,"
+        + "#[bg=\(c1) fg=black] \(iIdx) #{pane_index} "
+        + "#[bg=\(c2) fg=\(c1) nobold]\(pw)"
+        + "#[fg=white] \(iDir) #{pane_current_path} "
+        + "#[bg=\(c3) fg=\(c2)]\(pw)"
+        + "#[fg=white] \(iCmd) #{pane_current_command} "
+        + "#[bg=default fg=\(c3)]\(pw)#[default]"
+        + ",}"
+    let setBorderFormat = Process()
+    setBorderFormat.executableURL = URL(fileURLWithPath: tmux)
+    setBorderFormat.arguments = ["set", "-g", "pane-border-format", borderFormat]
+    try? setBorderFormat.run()
 
     // Use /bin/sh + printf to pass NFC bytes directly,
     // bypassing Foundation's NFD normalization of Korean characters
