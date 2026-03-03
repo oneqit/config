@@ -4,6 +4,16 @@
 
 # ─── Common ───
 export LANG=ko_KR.UTF-8
+
+# ─── PATH ───
+export PATH="$HOME/.local/bin:$PATH"
+
+# ─── Platform-specific ───
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# ─── Editor ───
 if command -v nvim &>/dev/null; then
   export EDITOR=nvim
 elif command -v vim &>/dev/null; then
@@ -17,14 +27,6 @@ if [[ -d ~/.config/oneqit/config ]]; then
   ONEQIT_CONFIG=~/.config/oneqit/config
 elif [[ -d __ONEQIT_CONFIG__ ]]; then
   ONEQIT_CONFIG=__ONEQIT_CONFIG__
-fi
-
-# ─── PATH ───
-export PATH="$HOME/.local/bin:$PATH"
-
-# ─── Platform-specific ───
-if [[ -f /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # ═══════════════════════════════════════════════════════
