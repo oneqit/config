@@ -11,8 +11,14 @@ tc() { _tmux_env; tmux choose-session "$@"; }  # run inside tmux
 tk() { _tmux_env; tmux kill-session "$@"; }   # use -t <name>
 tK() { _tmux_env; tmux kill-server "$@"; }
 
-# For servers without tmux-256color terminfo (e.g. CentOS 7)
-alias ssh-old='TERM=xterm ssh'
+# Auto-fallback TERM for SSH inside tmux (remote may lack tmux-256color terminfo)
+ssh() {
+  if [[ "$TERM" == tmux-* ]]; then
+    TERM=xterm-256color command ssh "$@"
+  else
+    command ssh "$@"
+  fi
+}
 
 # _tmux_split cmd_left cmd_right [cmd_right_bottom]
 _tmux_split() {
