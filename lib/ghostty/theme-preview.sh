@@ -5,7 +5,11 @@
 # 자동 순회 모드도 지원합니다.
 #
 
-GHOSTTY_CONFIG="$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+GHOSTTY_CONFIG="$HOME/.config/ghostty/config"
+GHOSTTY_LEGACY="$HOME/Library/Application Support/com.mitchellh.ghostty/config"
+if [[ -f "$GHOSTTY_LEGACY" ]]; then
+  GHOSTTY_CONFIG="$GHOSTTY_LEGACY"
+fi
 SOURCE_CONFIG="$(cd "$(dirname "$0")" && pwd)/config"
 
 if [[ ! -f "$GHOSTTY_CONFIG" ]]; then
@@ -23,7 +27,7 @@ apply_theme() {
 }
 
 # 테마 목록 로드
-THEMES=("${(@f)$(ghostty +list-themes | sed 's/ (resources)$//' | grep -iv light)}")
+THEMES=("${(@f)$(ghostty +list-themes | sed 's/ (resources)$//' | grep -iv -e light -e day -e 'black metal')}")
 TOTAL=${#THEMES[@]}
 
 # 현재 테마의 인덱스 찾기 (zsh는 1-indexed)
@@ -49,7 +53,7 @@ rebuild_filter() {
     local lower_filter="${FILTER:l}"
     for i in {1..$TOTAL}; do
       local lower_theme="${THEMES[$i]:l}"
-      if [[ "$lower_theme" == *"$lower_filter"* ]]; then
+      if [[ "$lower_theme" =~ $lower_filter ]]; then
         FILTERED_INDICES+=($i)
       fi
     done
@@ -96,7 +100,7 @@ show_status() {
     echo " 아무 키: 정지 | q: 종료"
   else
     echo " ←→: 이전/다음 | a: 자동 순회"
-    echo " /: 검색 | Enter: 확정 | q: 취소"
+    echo " /: 정규식 검색 | Enter: 확정 | q: 취소"
   fi
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 }

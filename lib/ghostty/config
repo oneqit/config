@@ -21,7 +21,8 @@ adjust-cell-height = -3%
 term = xterm-256color
 
 # ─── 스타일 ───
-theme = 0x96f
+theme = Monokai Pro Ristretto
+background = #1a1515
 
 # ─── 커서 ───
 cursor-style = block
