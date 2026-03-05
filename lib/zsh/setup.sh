@@ -67,7 +67,7 @@ setup_zshrc() {
 
   if [[ -n "$extras" ]]; then
     # 템플릿 끝 빈 줄 제거 후 extras를 바로 이어 붙임
-    sed -i '' -e '${/^$/d;}' "$tmp_file"
+    sed '${/^$/d;}' "$tmp_file" > "${tmp_file}.tmp" && mv "${tmp_file}.tmp" "$tmp_file"
     printf '%s\n\n' "$extras" >> "$tmp_file"
   fi
 
