@@ -1,7 +1,6 @@
 # ═══════════════════════════════════════════════════════
 #  .zshrc
 # ═══════════════════════════════════════════════════════
-
 # ─── Common ───
 export LANG=ko_KR.UTF-8
 
@@ -36,7 +35,6 @@ export ZSH="$HOME/.oh-my-zsh"
 
 plugins=(
   git
-  # zsh-autosuggestions  # 제안 텍스트가 사고의 흐름을 방해하여 비활성화
   zsh-syntax-highlighting
   zsh-completions
 )

@@ -18,7 +18,6 @@ install_oh_my_zsh() {
   fi
 
   local plugins=(
-    zsh-users/zsh-autosuggestions
     zsh-users/zsh-syntax-highlighting
     zsh-users/zsh-completions
   )
@@ -47,7 +46,7 @@ setup_zshrc() {
 
   if [[ -f "$zshrc" ]]; then
     extras=$(sed -n "/${extras_marker}/,\$p" "$zshrc" | tail -n +3)
-    # leading 빈 줄 제거 (템플릿 끝 빈 줄과 중복 방지, trailing은 $()가 자동 제거)
+    # leading 빈 줄 제거
     while [[ "$extras" == $'\n'* ]]; do extras="${extras#$'\n'}"; done
   fi
 
@@ -67,6 +66,8 @@ setup_zshrc() {
   fi
 
   if [[ -n "$extras" ]]; then
+    # 템플릿 끝 빈 줄 제거 후 extras를 바로 이어 붙임
+    sed -i '' -e '${/^$/d;}' "$tmp_file"
     printf '%s\n\n' "$extras" >> "$tmp_file"
   fi
 
