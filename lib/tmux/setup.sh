@@ -64,4 +64,8 @@ setup_tmux_im_status() {
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   setup_tmux
   is_macos && setup_tmux_im_status
+  echo ""
+  warn ".zshrc에 아래 설정이 필요합니다"
+  info "  source \"$_TMUX_DIR/.zshrc.append\""
+  info "  → .zshrc에 해당 설정이 있는지 확인해주세요"
 fi
