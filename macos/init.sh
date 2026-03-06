@@ -12,6 +12,7 @@ source "$REPO_DIR/lib/ghostty/setup.sh"
 source "$REPO_DIR/lib/karabiner/setup.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
+source "$REPO_DIR/lib/mise/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Homebrew 설치
@@ -198,6 +199,10 @@ main() {
   setup_tmux
   setup_tmux_im_status
 
+  section "mise"
+  install_mise
+  setup_mise_runtimes
+
   section "AI CLI"
   install_claude_code
   setup_claude_commands
@@ -214,6 +219,7 @@ main() {
   echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
   echo -e "    폰트     → CaskaydiaMono Nerd Font, Noto Sans Mono CJK KR"
   echo -e "    앱       → Rectangle, Scroll Reverser"
+  echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node)"
   echo -e "    CLI 도구 → git-flow-avh, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
   echo -e "    AI CLI   → Claude Code, Codex CLI"
