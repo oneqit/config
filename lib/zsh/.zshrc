@@ -63,6 +63,13 @@ command -v starship &>/dev/null && eval "$(starship init zsh)"
 command -v mise &>/dev/null && eval "$(mise activate zsh)"
 
 # ═══════════════════════════════════════════════════════
+#  Git
+# ═══════════════════════════════════════════════════════
+gaagc() {
+  git add -A && git commit -e -m "$(claude -p '/oneq-create-commit-message-on-staged')"
+}
+
+# ═══════════════════════════════════════════════════════
 #  Extras — 아래에 추가한 설정은 init/setup 재실행 시에도 보존
 # ═══════════════════════════════════════════════════════
 
