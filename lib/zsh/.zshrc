@@ -66,7 +66,10 @@ command -v mise &>/dev/null && eval "$(mise activate zsh)"
 #  Git
 # ═══════════════════════════════════════════════════════
 gaagc() {
-  git add -A && git commit -e -m "$(claude -p '/oneq-create-commit-message-on-staged')"
+  git add -A || return 1
+  git status
+  echo -e "\033[0;34mGenerating commit message with Claude...\033[0m"
+  git commit -e -m "$(claude -p '/oneq-create-commit-message-on-staged')"
 }
 
 # ═══════════════════════════════════════════════════════
