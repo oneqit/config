@@ -202,6 +202,7 @@ main() {
   section "mise"
   install_mise
   setup_mise_runtimes
+  setup_mise_settings
 
   section "AI CLI"
   install_claude_code
