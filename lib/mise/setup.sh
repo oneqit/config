@@ -20,26 +20,25 @@ install_mise() {
 #  mise 글로벌 런타임 설치
 # ───────────────────────────────────────────────────────
 setup_mise_runtimes() {
-  local tools=(rust python uv java maven kotlin)
+  local tools=(rust python uv java maven node kotlin)
 
   for tool in "${tools[@]}"; do
     if mise ls --installed "$tool" 2>/dev/null | grep -q "$tool"; then
       success "$tool 이미 설치됨"
-    else
-      info "$tool 설치 중..."
-      mise use -g "$tool@latest"
-      success "$tool 설치 완료"
+      continue
     fi
-  done
 
-  # node는 LTS 버전으로 설치
-  if mise ls --installed node 2>/dev/null | grep -q node; then
-    success "node 이미 설치됨"
-  else
-    info "node 설치 중 (LTS)..."
-    mise use -g node@lts
-    success "node 설치 완료"
-  fi
+    local version
+    case "$tool" in
+      node)   version="lts" ;;
+      kotlin) version="$(mise ls-remote kotlin | grep -E '^[0-9.]+$' | sort -V | tail -1)" ;;
+      *)      version="latest" ;;
+    esac
+
+    info "$tool 설치 중 ($version)..."
+    mise use -g "$tool@$version"
+    success "$tool 설치 완료"
+  done
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
