@@ -57,13 +57,18 @@ setup_zshrc() {
   sed "s|__ONEQIT_CONFIG__|$repo_dir|g" "$_ZSH_DIR/.zshrc" > "$tmp_file"
 
   # 템플릿 영역(Extras 이전)만 비교 — 사용자 Extras 변경으로 불필요한 백업 방지
-  local template_lines
-  template_lines=$(wc -l < "$tmp_file")
-  if [[ -f "$zshrc" ]] && head -n "$template_lines" "$zshrc" | cmp -s "$tmp_file" -; then
-    rm -f "$tmp_file"
+  # 비교 시 템플릿 끝 빈 줄을 제거한 상태로 비교 (저장 시에도 제거되므로)
+  local tmp_trimmed
+  tmp_trimmed="$(mktemp)"
+  sed '${/^$/d;}' "$tmp_file" > "$tmp_trimmed"
+  local trimmed_lines
+  trimmed_lines=$(wc -l < "$tmp_trimmed")
+  if [[ -f "$zshrc" ]] && head -n "$trimmed_lines" "$zshrc" | cmp -s "$tmp_trimmed" -; then
+    rm -f "$tmp_file" "$tmp_trimmed"
     success ".zshrc 변경 없음 → 스킵"
     return
   fi
+  rm -f "$tmp_trimmed"
 
   if [[ -n "$extras" ]]; then
     # 템플릿 끝 빈 줄 제거 후 extras를 바로 이어 붙임
