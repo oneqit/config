@@ -14,8 +14,8 @@ font-codepoint-map = U+3400-U+4DBF=Noto Sans Mono CJK KR
 font-codepoint-map = U+F900-U+FAFF=Noto Sans Mono CJK KR
 font-codepoint-map = U+3000-U+303F=Noto Sans Mono CJK KR
 font-size = 12
-adjust-cell-width = -6%
-adjust-cell-height = -3%
+# adjust-cell-width = -6%
+# adjust-cell-height = -3%
 
 # ─── 터미널 ───
 term = xterm-256color
