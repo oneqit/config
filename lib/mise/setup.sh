@@ -20,7 +20,7 @@ install_mise() {
 #  mise 글로벌 런타임 설치
 # ───────────────────────────────────────────────────────
 setup_mise_runtimes() {
-  local tools=(rust python uv java maven node kotlin)
+  local tools=(rust uv java maven node kotlin)
 
   for tool in "${tools[@]}"; do
     if mise ls --installed "$tool" 2>/dev/null | grep -q "$tool"; then
@@ -45,7 +45,7 @@ setup_mise_runtimes() {
 #  mise 글로벌 설정
 # ───────────────────────────────────────────────────────
 setup_mise_settings() {
-  local tools=(java python node)
+  local tools=(java node)
   local current
   current="$(mise settings get idiomatic_version_file_enable_tools 2>/dev/null)"
 
@@ -58,6 +58,16 @@ setup_mise_settings() {
       success "idiomatic_version_file: $tool 추가 완료"
     fi
   done
+
+  # Python venv 자동 활성화 (디렉터리 진입 시 .venv 자동 activate)
+  local config_file="$HOME/.config/mise/config.toml"
+  if grep -q 'python\.venv' "$config_file" 2>/dev/null; then
+    success "python.venv 자동 활성화 이미 설정됨"
+  else
+    info "python.venv 자동 활성화 설정 중..."
+    mise set --global _.python.venv=.venv
+    success "python.venv 자동 활성화 설정 완료"
+  fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
