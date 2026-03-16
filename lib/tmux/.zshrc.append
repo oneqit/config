@@ -46,6 +46,7 @@ _tmux_split() {
   fi
 }
 
-qlaude() { _tmux_split "${1:-nvim}" "${2:-claude}"; }
-qodex()  { _tmux_split "${1:-nvim}" "${2:-codex}"; }
-qode()   { _tmux_split "${1:-nvim}" "${2:-claude}" "${3:-codex}"; }
+qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude}"; }
+qodex()   { _tmux_split "${1:-nvim}" "${2:-codex}"; }
+qopilot() { _tmux_split "${1:-nvim}" "${2:-copilot}"; }
+qode()    { _tmux_split "${1:-nvim}" "${2:-claude}" "${3:-copilot}"; }
