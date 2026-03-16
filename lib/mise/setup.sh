@@ -58,16 +58,6 @@ setup_mise_settings() {
       success "idiomatic_version_file: $tool 추가 완료"
     fi
   done
-
-  # Python venv 자동 활성화 (디렉터리 진입 시 .venv 자동 activate)
-  local config_file="$HOME/.config/mise/config.toml"
-  if grep -q 'python\.venv' "$config_file" 2>/dev/null; then
-    success "python.venv 자동 활성화 이미 설정됨"
-  else
-    info "python.venv 자동 활성화 설정 중..."
-    mise set --global _.python.venv=.venv
-    success "python.venv 자동 활성화 설정 완료"
-  fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
