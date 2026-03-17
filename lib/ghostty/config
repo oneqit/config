@@ -37,5 +37,6 @@ quick-terminal-space-behavior = remain
 quick-terminal-animation-duration = 0
 
 # ─── 기타 ───
+macos-option-as-alt = true
 copy-on-select = clipboard
 
