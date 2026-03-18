@@ -10,6 +10,7 @@ source "$REPO_DIR/lib/tmux/setup.sh"
 source "$REPO_DIR/lib/deploy.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
+source "$REPO_DIR/lib/ai/copilot/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Termux 설정 (termux.properties)
@@ -175,6 +176,7 @@ main() {
   install_claude_code
   setup_claude_commands
   install_codex
+  install_copilot
 
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
@@ -187,7 +189,7 @@ main() {
   echo -e "    폰트     → CaskaydiaMono Nerd Font"
   echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit, nodejs"
   echo -e "    Termux   → 한글 입력, 추가 키 커스터마이징"
-  echo -e "    AI CLI   → Claude Code, Codex CLI"
+  echo -e "    AI CLI   → Claude Code, Codex CLI, Copilot CLI"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
   echo -e "  ${YELLOW}※ 일부 설정은 Termux 앱 재시작 후 반영됩니다.${NC}"
