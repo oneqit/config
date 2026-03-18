@@ -8,7 +8,7 @@ source "$_COPILOT_DIR/../../platform.sh"
 #  GitHub Copilot CLI 설치
 # ───────────────────────────────────────────────────────
 install_copilot() {
-  if command -v github-copilot-cli &>/dev/null; then
+  if command -v copilot &>/dev/null; then
     success "GitHub Copilot CLI 이미 설치됨"
     return
   fi
