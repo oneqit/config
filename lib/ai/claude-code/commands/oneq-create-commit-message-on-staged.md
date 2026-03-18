@@ -19,6 +19,7 @@ git log -n 10 --no-merges --format="%s%n%n%b----------"
 ## 규칙
 - 직접 커밋 하지말고 커밋 메시지만 출력
 - 코드블록이나 기타 마크다운 서식 없이 순수 텍스트만 출력
+- 터미널 색상 코드(ANSI escape sequence) 없이 출력
 - 기존 커밋 메시지 형식을 참고하여, prefix 스타일을 유지
 - prefix 스타일이 명확하지 않다면 Conventional Commits 형식 사용
 - .env, 시크릿, 임시/디버그 코드 등이 staged에 포함된 경우 첫 줄 맨 앞에 `⚠️⚠️⚠️` 를 붙이고 위험 내용을 명시해줘

@@ -30,7 +30,8 @@ main() {
 
   for pattern in "${BACKUP_PATTERNS[@]}"; do
     # glob이 매칭되지 않으면 패턴 문자열 그대로 남으므로 존재 여부 확인
-    [[ -e "$pattern" ]] && targets+=("$pattern")
+    # -L: 끊어진 심링크도 감지
+    [[ -e "$pattern" || -L "$pattern" ]] && targets+=("$pattern")
   done
 
   if [[ ${#targets[@]} -eq 0 ]]; then
