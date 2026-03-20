@@ -1,6 +1,25 @@
 import Carbon
 import Foundation
 
+func switchToEnglish() {
+    guard let sources = TISCreateInputSourceList(nil, false)?.takeRetainedValue() as? [TISInputSource]
+    else { return }
+    for source in sources {
+        guard let idRef = TISGetInputSourceProperty(source, kTISPropertyInputSourceID) else { continue }
+        let id = Unmanaged<CFString>.fromOpaque(idRef).takeUnretainedValue() as String
+        if id == "com.apple.keylayout.ABC" {
+            TISSelectInputSource(source)
+            break
+        }
+    }
+}
+
+// Subcommand: switch to English and exit
+if CommandLine.arguments.count > 1 && CommandLine.arguments[1] == "switch-english" {
+    switchToEnglish()
+    exit(0)
+}
+
 func updateTmuxStatus() {
     guard let source = TISCopyCurrentKeyboardInputSource()?.takeRetainedValue(),
           let idRef = TISGetInputSourceProperty(source, kTISPropertyInputSourceID),
