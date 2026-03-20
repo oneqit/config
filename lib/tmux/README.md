@@ -56,31 +56,33 @@ tmux 내에서 ssh 실행 시 TERM을 `xterm-256color`로 자동 변환 (원격 
 
 | 키 | 설명 |
 |---|---|
-| `Ctrl+a` | Prefix 키 |
+| `Ctrl+a` 또는 `F1` | Prefix 키 (자동 영문 전환) |
 | `Prefix + \|` | 수평 분할 |
 | `Prefix + -` | 수직 분할 |
 | `Prefix + h/j/k/l` | 패널 이동 (vi 스타일) |
-| `Prefix + ㅗ/ㅓ/ㅏ/ㅣ` | 패널 이동 (한글 키) |
 | `Prefix + 방향키` | 패널 크기 조절 |
+| `Prefix + Ctrl+a` | 프로그램에 Ctrl+a 전송 |
+
+> **한글 입력 호환:** Prefix(`Ctrl+a` / `F1`) 입력 시 macOS 입력기가 자동으로 영문 전환되므로, 한글 입력 상태에서도 모든 키 바인딩이 정상 동작한다. 한글 중복 바인딩(ㅗ/ㅓ/ㅏ/ㅣ 등)은 불필요하여 제거됨.
 
 ### copy-mode-vi 키 바인딩
 
 | 키 | 설명 |
 |---|---|
-| `v` / `ㅍ` | 선택 시작 |
+| `v` | 선택 시작 |
 | `C-v` | 사각형 선택 토글 |
-| `y` / `ㅛ` | 복사 |
+| `y` | 복사 |
 | `h/j/k/l` | 커서 이동 |
-| `ㅗ/ㅓ/ㅏ/ㅣ` | 커서 이동 (한글 키) |
 | `C-e` | 아래로 스크롤 |
 | `C-y` | 위로 스크롤 |
-| `q` / `ㅂ` | copy-mode 종료 |
 
-## 입력기 상태 표시 (macOS 전용)
+## 입력기 상태 표시 및 자동 전환 (macOS 전용)
 
 상태바 우측에 현재 입력기(한/EN)를 표시한다. 한글 입력 중에는 `[한]`과 함께 배경색이 변경되고, 영문 입력 중에는 `[EN]`이 기본 스타일로 표시된다.
 
-- `tmux-im-status.swift` — macOS 입력 소스 변경을 감지하여 tmux 변수(`@im-status`)와 `status-style`을 업데이트하는 Swift 데몬
+- `tmux-im-status.swift` — 두 가지 모드로 동작하는 Swift 바이너리
+  - **데몬 모드** (인자 없이 실행): macOS 입력 소스 변경을 감지하여 tmux 변수(`@im-status`)와 `status-style`을 업데이트
+  - **`switch-english` 모드**: 입력기를 영문(ABC)으로 전환 후 즉시 종료. Prefix 키 입력 시 tmux가 `run-shell -b`로 호출하여 후속 키 입력이 영문으로 동작하도록 함
 - `com.oneq.tmux-im-status.plist` — launchd로 데몬을 자동 실행하는 설정
 - `setup_tmux_im_status` 함수가 컴파일, plist 배포, 서비스 등록을 처리
 
