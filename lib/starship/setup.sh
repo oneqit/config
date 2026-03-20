@@ -12,4 +12,8 @@ setup_starship_config() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   setup_starship_config
+  echo ""
+  warn ".zshrc에 아래 설정이 필요합니다"
+  info "  eval \"\$(starship init zsh)\""
+  info "  → .zshrc에 해당 설정이 있는지 확인해주세요"
 fi
