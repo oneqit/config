@@ -219,7 +219,7 @@ main() {
   echo -e "  설치된 구성:"
   echo -e "    터미널   → Ghostty"
   echo -e "    프롬프트 → Starship"
-  echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
+  echo -e "    셸       → Oh My Zsh"
   echo -e "    폰트     → CaskaydiaMono Nerd Font, Noto Sans Mono CJK KR"
   echo -e "    앱       → Rectangle, Scroll Reverser"
   echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node)"
