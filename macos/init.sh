@@ -43,7 +43,7 @@ install_packages() {
   # brew패키지:커맨드명
   local packages=(
     "git:git"
-    "git-flow-avh:git-flow"
+    "git-flow-next:git-flow"
     "neovim:nvim"
     "tmux:tmux"
     "starship:starship"
@@ -223,7 +223,7 @@ main() {
   echo -e "    폰트     → CaskaydiaMono Nerd Font, Noto Sans Mono CJK KR"
   echo -e "    앱       → Rectangle, Scroll Reverser"
   echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node)"
-  echo -e "    CLI 도구 → git-flow-avh, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
+  echo -e "    CLI 도구 → git-flow-next, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → colima, docker-credential-helper"
   echo -e "    AI CLI   → Claude Code, Codex CLI, Copilot CLI"
   echo -e "    키보드   → 키 반복 입력, 한영 백틱(\`), Karabiner (⌥R→F18)"
