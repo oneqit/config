@@ -44,6 +44,8 @@ setup_tmux_im_status() {
     success "plist 이미 배포됨 → 스킵"
   else
     mkdir -p "$(dirname "$plist_dst")"
+    chmod 700 "$(dirname "$plist_dst")"
+    info "디렉토리 생성 및 권한 설정 → \"$(dirname "$plist_dst")\" (700)"
     sed "s|__HOME__|$HOME|g" "$plist_src" > "$plist_dst"
     success "plist 배포 완료 → \"$plist_dst\""
   fi
