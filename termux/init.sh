@@ -185,7 +185,7 @@ main() {
   echo ""
   echo -e "  설치된 구성:"
   echo -e "    프롬프트 → Starship"
-  echo -e "    셸       → Oh My Zsh (자동제안, 구문강조, 자동완성)"
+  echo -e "    셸       → Oh My Zsh"
   echo -e "    폰트     → CaskaydiaMono Nerd Font"
   echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit, nodejs"
   echo -e "    Termux   → 한글 입력, 추가 키 커스터마이징"
