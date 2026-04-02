@@ -20,6 +20,7 @@ BACKUP_PATTERNS=(
   "$HOME/.claude/commands.backup."*
   "$HOME/.termux/termux.properties.backup."*
   "$HOME/.termux/font.ttf.backup."*
+  # "$HOME/.docker/config.json.backup."*  # 충분히 검토된 후 주석 해제
 )
 
 main() {

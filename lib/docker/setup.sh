@@ -33,28 +33,31 @@ install_docker() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Docker Compose 플러그인 심볼릭 링크
+#  Docker Compose 플러그인 설정 (config.json)
 # ───────────────────────────────────────────────────────
 setup_docker_compose_plugin() {
-  local plugins_dir="$HOME/.docker/cli-plugins"
-  local link_path="$plugins_dir/docker-compose"
-  local target="/opt/homebrew/opt/docker-compose/bin/docker-compose"
+  local config_file="$HOME/.docker/config.json"
+  local plugins_dir="/opt/homebrew/lib/docker/cli-plugins"
 
-  mkdir -p "$plugins_dir"
+  mkdir -p "$HOME/.docker"
 
-  if [[ -L "$link_path" ]] && [[ "$(readlink "$link_path")" == "$target" ]]; then
-    success "Docker Compose 플러그인 링크 이미 설정됨"
-    return
+  if [[ -f "$config_file" ]]; then
+    if jq -e ".cliPluginsExtraDirs // [] | index(\"$plugins_dir\")" "$config_file" &>/dev/null; then
+      success "Docker Compose 플러그인 경로 이미 설정됨"
+      return
+    fi
+    warn "config.json 이미 존재 → 백업"
+    cp "$config_file" "${config_file}.backup.$(date +%Y%m%d%H%M%S)"
+    info "config.json에 cliPluginsExtraDirs 추가 중..."
+    local updated
+    updated=$(jq --arg dir "$plugins_dir" '.cliPluginsExtraDirs = ((.cliPluginsExtraDirs // []) + [$dir] | unique)' "$config_file")
+    printf '%s\n' "$updated" > "$config_file"
+  else
+    info "config.json 생성 중..."
+    jq -n --arg dir "$plugins_dir" '{"cliPluginsExtraDirs": [$dir]}' > "$config_file"
   fi
 
-  if [[ -e "$link_path" ]]; then
-    info "기존 docker-compose 플러그인 제거 중..."
-    rm -f "$link_path"
-  fi
-
-  info "Docker Compose 플러그인 링크 생성 중..."
-  ln -s "$target" "$link_path"
-  success "Docker Compose 플러그인 링크 완료 → $link_path"
+  success "Docker Compose 플러그인 경로 설정 완료 → $plugins_dir"
 }
 
 # ───────────────────────────────────────────────────────
