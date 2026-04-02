@@ -1,3 +1,9 @@
+---
+name: oneq-update-claude-md
+description: CLAUDE.md 업데이트
+disable-model-invocation: true
+---
+
 # CLAUDE.md 업데이트
 
 지금 작업한 내용이 CLAUDE.md에 반영되어 있는지 확인하고, 누락된 부분 업데이트해줘.

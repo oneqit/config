@@ -23,33 +23,33 @@ install_claude_code() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Claude Code 명령어 심링크 설정
+#  Claude Code Skills 심링크 설정
 # ───────────────────────────────────────────────────────
-setup_claude_commands() {
-  local src_dir="$_CLAUDE_CODE_DIR/commands"
-  local dst="$HOME/.claude/commands"
+setup_claude_skills() {
+  local src_dir="$_CLAUDE_CODE_DIR/skills"
+  local dst="$HOME/.claude/skills"
 
   src_dir="$(cd "$src_dir" && pwd)"
   mkdir -p "$HOME/.claude"
 
   if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src_dir" ]]; then
-    success "Claude 명령어 이미 연결됨"
+    success "Claude Skills 이미 연결됨"
     return
   fi
 
   if [[ -L "$dst" ]] || [[ -e "$dst" ]]; then
-    warn "Claude 명령어 기존 경로 백업"
+    warn "Claude Skills 기존 경로 백업"
     mv "$dst" "${dst}.backup.$(date +%Y%m%d%H%M%S)"
   fi
 
   if ln -s "$src_dir" "$dst"; then
-    success "Claude 명령어 연결 완료 → $dst"
+    success "Claude Skills 연결 완료 → $dst"
   else
-    error "Claude 명령어 연결 실패"
+    error "Claude Skills 연결 실패"
   fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   install_claude_code
-  setup_claude_commands
+  setup_claude_skills
 fi

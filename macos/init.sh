@@ -211,7 +211,7 @@ main() {
 
   section "AI CLI"
   install_claude_code
-  setup_claude_commands
+  setup_claude_skills
   install_codex
   install_copilot
 

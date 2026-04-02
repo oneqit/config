@@ -1,3 +1,9 @@
+---
+name: oneq-create-commit-message-on-staged
+description: Commit 메시지 생성
+disable-model-invocation: true
+---
+
 # Commit 메시지 생성
 
 다음과 같이 staged된 변경사항을 분석하고 커밋 메시지를 작성해줘.
