@@ -30,6 +30,9 @@ cd ~/.config/oneqit/config
 ./lib/starship/setup.sh  # Starship 프롬프트
 ./lib/tmux/setup.sh      # tmux 설정
 ./lib/ghostty/setup.sh   # Ghostty 터미널 (macOS)
+./lib/docker/setup.sh    # Docker 설치
+./lib/karabiner/setup.sh # Karabiner-Elements 키매핑 (macOS)
+./lib/mise/setup.sh      # mise 런타임 매니저
 ```
 
 > **참고:** Karabiner-Elements 설치 시 시스템 패스워드를 요구할 수 있습니다.
@@ -44,8 +47,12 @@ lib/
 ├── platform.sh      # 플랫폼 판별 함수
 ├── ai/
 │   ├── claude-code/ # Claude Code 셋업
-│   └── codex/       # Codex CLI 셋업
+│   ├── codex/       # Codex CLI 셋업
+│   └── copilot/     # Copilot CLI 셋업
+├── docker/          # Docker 설치 셋업
 ├── ghostty/         # Ghostty 설정 + 셋업
+├── karabiner/       # Karabiner-Elements 키매핑 설정
+├── mise/            # mise 런타임 매니저 셋업
 ├── starship/        # Starship 설정 + 셋업
 ├── tmux/            # tmux 설정 + 셋업
 └── zsh/             # Oh My Zsh + .zshrc 셋업

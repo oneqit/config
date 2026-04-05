@@ -14,6 +14,7 @@ source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
 source "$REPO_DIR/lib/ai/copilot/setup.sh"
 source "$REPO_DIR/lib/mise/setup.sh"
+source "$REPO_DIR/lib/docker/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Homebrew 설치
@@ -52,8 +53,6 @@ install_packages() {
     "lazygit:lazygit"
     "lazydocker:lazydocker"
     "k9s:k9s"
-    "colima:colima"
-    "docker-credential-helper:docker-credential-osxkeychain"
   )
 
   for entry in "${packages[@]}"; do
@@ -205,9 +204,14 @@ main() {
   setup_mise_runtimes
   setup_mise_settings
 
+  section "Docker"
+  install_docker
+  setup_docker_compose_plugin
+  install_colima
+
   section "AI CLI"
   install_claude_code
-  setup_claude_commands
+  setup_claude_skills
   install_codex
   install_copilot
 
@@ -224,7 +228,7 @@ main() {
   echo -e "    앱       → Rectangle, Scroll Reverser"
   echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node)"
   echo -e "    CLI 도구 → git-flow-next, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
-  echo -e "    컨테이너 → colima, docker-credential-helper"
+  echo -e "    컨테이너 → Docker CLI, Docker Compose, Colima"
   echo -e "    AI CLI   → Claude Code, Codex CLI, Copilot CLI"
   echo -e "    키보드   → 키 반복 입력, 한영 백틱(\`), Karabiner (⌥R→F18)"
   echo -e "    tmux     → 설정 + 셸 함수"

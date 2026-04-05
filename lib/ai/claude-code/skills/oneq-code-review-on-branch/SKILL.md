@@ -1,0 +1,59 @@
+---
+name: oneq-code-review-on-branch
+description: develop 브랜치와 특정 브랜치를 비교하여 코드 리뷰
+disable-model-invocation: true
+argument-hint: [branch-name]
+---
+
+# 브랜치 비교 코드 리뷰
+
+develop 브랜치 대비 `$ARGUMENTS` 브랜치의 변경사항을 코드 리뷰해줘.
+인자가 없으면 현재 브랜치를 대상으로 한다.
+
+1. 변경 파일 목록 확인
+```
+git diff develop...$ARGUMENTS --stat
+```
+
+2. 커밋 히스토리 확인
+```
+git log develop...$ARGUMENTS --oneline
+```
+
+3. 전체 diff 분석
+```
+git diff develop...$ARGUMENTS
+```
+
+## 리뷰 항목
+
+1. **버그 및 오류**: 잠재적인 버그, 엣지 케이스 누락, null/undefined 처리
+2. **보안**: 보안 취약점, 민감한 정보 노출
+3. **성능**: 불필요한 연산, 메모리 누수, N+1 쿼리 등
+4. **호환성/의존성**: 다른 모듈에 미치는 영향, breaking change 여부
+5. **에러 핸들링**: 예외 처리 누락, 에러 메시지 적절성
+6. **테스트**: 테스트 누락, 기존 테스트 깨짐 가능성
+7. **가독성**: 네이밍, 복잡한 로직, 주석 필요 여부
+8. **베스트 프랙티스**: 코딩 컨벤션, 디자인 패턴
+
+## 출력 형식
+
+아래 형식으로 출력해줘.
+
+```
+## 요약
+- 변경 범위: OO 기능 추가/수정
+- 전체 심각도: 🟡 중간 이슈 N건
+
+## 파일별 리뷰
+
+### path/to/file.ts
+- 🔴 [L42] 이슈 설명 → 개선 코드
+- 🟢 [L78] 이슈 설명 → 개선 코드
+
+### path/to/other.ts
+- 🟡 [L15] 이슈 설명 → 개선 코드
+
+## 총평
+머지 가능 여부 및 우선 수정 권장 사항
+```
