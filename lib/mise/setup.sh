@@ -30,6 +30,7 @@ setup_mise_runtimes() {
 
     local version
     case "$tool" in
+      java)   version="temurin-21" ;;
       node)   version="lts" ;;
       kotlin) version="$(mise ls-remote kotlin | grep -E '^[0-9.]+$' | sort -V | tail -1)" ;;
       *)      version="latest" ;;
