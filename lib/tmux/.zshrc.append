@@ -46,10 +46,10 @@ _tmux_split() {
   fi
 }
 
-qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude}"; }
+qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}"; }
 qodex()   { _tmux_split "${1:-nvim}" "${2:-codex}"; }
 qopilot() { _tmux_split "${1:-nvim}" "${2:-copilot}"; }
-qode()    { _tmux_split "${1:-nvim}" "${2:-claude}" "${3:-copilot}"; }
+qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-copilot}"; }
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # qmux — 멀티 에이전트 병렬 실행
@@ -163,6 +163,8 @@ qmux() {
     local prompt_arg="cat '${tmpfile}'"
     if [[ "$agent" == "copilot" ]]; then
       echo "${agent} -i \"\$(${prompt_arg})\""
+    elif [[ "$agent" == "claude" ]]; then
+      echo "${agent} --allow-dangerously-skip-permissions \"\$(${prompt_arg})\""
     else
       echo "${agent} \"\$(${prompt_arg})\""
     fi
