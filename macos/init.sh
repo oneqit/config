@@ -206,7 +206,7 @@ main() {
 
   section "Docker"
   install_docker
-  setup_docker_compose_plugin
+  setup_docker_cli_plugins
   install_colima
 
   section "AI CLI"
