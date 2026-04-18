@@ -11,6 +11,7 @@ source "$REPO_DIR/lib/deploy.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
 source "$REPO_DIR/lib/ai/copilot/setup.sh"
+source "$REPO_DIR/lib/ai/gemini/setup.sh"
 
 # ───────────────────────────────────────────────────────
 #  Termux 설정 (termux.properties)
@@ -177,6 +178,7 @@ main() {
   setup_claude_skills
   install_codex
   install_copilot
+  install_gemini
 
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"

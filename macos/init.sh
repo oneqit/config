@@ -13,6 +13,7 @@ source "$REPO_DIR/lib/karabiner/setup.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
 source "$REPO_DIR/lib/ai/copilot/setup.sh"
+source "$REPO_DIR/lib/ai/gemini/setup.sh"
 source "$REPO_DIR/lib/mise/setup.sh"
 source "$REPO_DIR/lib/docker/setup.sh"
 
@@ -214,6 +215,7 @@ main() {
   setup_claude_skills
   install_codex
   install_copilot
+  install_gemini
 
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
