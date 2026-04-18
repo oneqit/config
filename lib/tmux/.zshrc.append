@@ -52,15 +52,15 @@ qopilot() { _tmux_split "${1:-nvim}" "${2:-copilot}"; }
 qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-copilot}"; }
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# qmux — 멀티 에이전트 병렬 실행
+# qmuxs — 멀티 에이전트 병렬 실행
 #
 # 사용법:
-#   qmux                           # 에이전트 선택 → 프롬프트 입력 → 병렬 실행
-#   qmux "이 코드의 버그를 찾아줘"   # 프롬프트를 바로 넘기면 선택 후 즉시 실행
-#   qmux prompt.md                  # 파일 경로를 넘기면 파일 내용을 프롬프트로 사용
+#   qmuxs                           # 에이전트 선택 → 프롬프트 입력 → 병렬 실행
+#   qmuxs "이 코드의 버그를 찾아줘"   # 프롬프트를 바로 넘기면 선택 후 즉시 실행
+#   qmuxs prompt.md                  # 파일 경로를 넘기면 파일 내용을 프롬프트로 사용
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-qmux() {
+qmuxs() {
   _tmux_env
 
   # ── 1) 설치된 에이전트 감지 ──────────────────────────
@@ -153,12 +153,12 @@ qmux() {
   if [[ -f "$prompt" ]]; then
     tmpfile="$prompt"
   else
-    tmpfile=$(mktemp "/tmp/qmux-XXXXXX")
+    tmpfile=$(mktemp "/tmp/qmuxs-XXXXXX")
     echo "$prompt" > "$tmpfile"
   fi
 
   # send-keys용 명령 문자열 생성
-  _qmux_cmd() {
+  _qmuxs_cmd() {
     local label="$1" agent="$2"
     local prompt_arg="cat '${tmpfile}'"
     if [[ "$agent" == "copilot" ]]; then
@@ -186,7 +186,7 @@ qmux() {
       local pct=$(( (n - i + 1) * 100 / (n - i + 2) ))
       split_cmds+=(
         split-window -v -l "${pct}%" -c "$workdir" \;
-        send-keys "$(_qmux_cmd "$label" "$agent")" C-m \;
+        send-keys "$(_qmuxs_cmd "$label" "$agent")" C-m \;
       )
     done
 
@@ -195,23 +195,23 @@ qmux() {
 
     tmux "${split_cmds[@]}" \
       select-pane -t "$origin_pane" \; \
-      send-keys "$(_qmux_cmd "$first_label" "$first")" C-m
+      send-keys "$(_qmuxs_cmd "$first_label" "$first")" C-m
 
   else
     # ── tmux 밖: 새 세션 생성 ──
-    local session="qmux-$(date +%H%M%S)"
+    local session="qmuxs-$(date +%H%M%S)"
     local first="${selected[1]}"
     local first_label="${$(echo "$first"):u}"
 
     tmux new-session -d -s "$session" -c "$workdir"
-    tmux send-keys -t "$session" "$(_qmux_cmd "$first_label" "$first")" C-m
+    tmux send-keys -t "$session" "$(_qmuxs_cmd "$first_label" "$first")" C-m
 
     for ((i = 2; i <= n; i++)); do
       local agent="${selected[$i]}"
       local label="${$(echo "$agent"):u}"
       local pct=$(( (n - i + 1) * 100 / (n - i + 2) ))
       tmux split-window -v -l "${pct}%" -t "$session" -c "$workdir"
-      tmux send-keys "$(_qmux_cmd "$label" "$agent")" C-m
+      tmux send-keys "$(_qmuxs_cmd "$label" "$agent")" C-m
     done
 
     tmux select-pane -t "${session}:0.0"
