@@ -79,7 +79,7 @@ install_font() {
   )
 
   for font in "${fonts[@]}"; do
-    if brew list --cask "$font" &>/dev/null; then
+    if [[ -d "/opt/homebrew/Caskroom/$font" ]] || brew list --cask "$font" &>/dev/null; then
       success "$font 이미 설치됨"
     else
       info "$font 설치 중..."

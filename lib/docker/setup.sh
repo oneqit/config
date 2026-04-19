@@ -15,7 +15,7 @@ install_docker() {
     success "Docker CLI 설치 완료"
   fi
 
-  if brew list docker-compose &>/dev/null; then
+  if [[ -d "/opt/homebrew/opt/docker-compose" ]] || brew list docker-compose &>/dev/null; then
     success "Docker Compose 이미 설치됨"
   else
     info "Docker Compose 설치 중..."
@@ -23,7 +23,7 @@ install_docker() {
     success "Docker Compose 설치 완료"
   fi
 
-  if brew list docker-buildx &>/dev/null; then
+  if [[ -d "/opt/homebrew/opt/docker-buildx" ]] || brew list docker-buildx &>/dev/null; then
     success "Docker Buildx 이미 설치됨"
   else
     info "Docker Buildx 설치 중..."
