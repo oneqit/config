@@ -1,7 +1,6 @@
 ---
 name: oneq-code-review-on-branch
 description: develop 브랜치와 현재 브랜치를 비교하여 코드 리뷰
-disable-model-invocation: true
 ---
 
 # 브랜치 비교 코드 리뷰

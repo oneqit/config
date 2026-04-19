@@ -1,26 +1,20 @@
 ---
-name: oneq-code-review-on-branch
-description: develop 브랜치와 현재 브랜치를 비교하여 코드 리뷰
-disable-model-invocation: true
+name: oneq-code-review-on-staged
+description: Staged 파일 코드 리뷰
 ---
 
-# 브랜치 비교 코드 리뷰
+# Staged 파일 코드 리뷰
 
-develop 브랜치 대비 현재 브랜치의 변경사항을 코드 리뷰해줘.
+다음 staged된 변경사항을 코드 리뷰해줘.
 
 1. 변경 파일 목록 확인
 ```
-git diff develop...HEAD --stat
+git diff --staged --stat
 ```
 
-2. 커밋 히스토리 확인
+2. 전체 diff 분석
 ```
-git log develop...HEAD --oneline
-```
-
-3. 전체 diff 분석
-```
-git diff develop...HEAD
+git diff --staged
 ```
 
 ## 리뷰 항목

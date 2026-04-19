@@ -214,6 +214,7 @@ main() {
   install_claude_code
   setup_claude_skills
   install_codex
+  setup_codex_skills
   install_copilot
   install_gemini
 
