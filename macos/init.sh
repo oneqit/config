@@ -13,6 +13,7 @@ source "$REPO_DIR/lib/karabiner/setup.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
 source "$REPO_DIR/lib/ai/copilot/setup.sh"
+source "$REPO_DIR/lib/ai/gemini/setup.sh"
 source "$REPO_DIR/lib/mise/setup.sh"
 source "$REPO_DIR/lib/docker/setup.sh"
 
@@ -78,7 +79,7 @@ install_font() {
   )
 
   for font in "${fonts[@]}"; do
-    if brew list --cask "$font" &>/dev/null; then
+    if [[ -d "/opt/homebrew/Caskroom/$font" ]] || brew list --cask "$font" &>/dev/null; then
       success "$font 이미 설치됨"
     else
       info "$font 설치 중..."
@@ -206,14 +207,16 @@ main() {
 
   section "Docker"
   install_docker
-  setup_docker_compose_plugin
+  setup_docker_cli_plugins
   install_colima
 
   section "AI CLI"
   install_claude_code
   setup_claude_skills
   install_codex
+  setup_codex_skills
   install_copilot
+  install_gemini
 
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"

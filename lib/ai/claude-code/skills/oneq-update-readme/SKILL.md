@@ -1,9 +1,0 @@
----
-name: oneq-update-readme
-description: README.md 업데이트
-disable-model-invocation: true
----
-
-# README.md 업데이트
-
-지금 작업한 내용이 README.md에 반영되어 있는지 확인하고, 누락된 부분 업데이트해줘.

@@ -118,6 +118,9 @@ sudo launchctl print system/homebrew.sshd
 
 ### 3-5) 설정 변경 후 반영
 
+`sshd_config`를 수정했거나 **`brew upgrade`로 openssh가 업그레이드**된 경우 재기동이 필요.
+업그레이드 후 재기동을 빼먹으면 기존 listener가 구 바이너리를 붙잡고 있어 클라이언트에서 `kex_exchange_identification: Connection closed by remote host` 발생.
+
 ```bash
 sudo launchctl bootout system/homebrew.sshd
 sudo launchctl bootstrap system /Library/LaunchDaemons/homebrew.sshd.plist

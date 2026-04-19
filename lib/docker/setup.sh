@@ -15,12 +15,20 @@ install_docker() {
     success "Docker CLI 설치 완료"
   fi
 
-  if brew list docker-compose &>/dev/null; then
+  if [[ -d "/opt/homebrew/opt/docker-compose" ]] || brew list docker-compose &>/dev/null; then
     success "Docker Compose 이미 설치됨"
   else
     info "Docker Compose 설치 중..."
     brew install docker-compose
     success "Docker Compose 설치 완료"
+  fi
+
+  if [[ -d "/opt/homebrew/opt/docker-buildx" ]] || brew list docker-buildx &>/dev/null; then
+    success "Docker Buildx 이미 설치됨"
+  else
+    info "Docker Buildx 설치 중..."
+    brew install docker-buildx
+    success "Docker Buildx 설치 완료"
   fi
 
   if command -v docker-credential-osxkeychain &>/dev/null; then
@@ -33,9 +41,9 @@ install_docker() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Docker Compose 플러그인 설정 (config.json)
+#  Docker CLI 플러그인 설정 (config.json)
 # ───────────────────────────────────────────────────────
-setup_docker_compose_plugin() {
+setup_docker_cli_plugins() {
   local config_file="$HOME/.docker/config.json"
   local plugins_dir="/opt/homebrew/lib/docker/cli-plugins"
 
@@ -43,7 +51,7 @@ setup_docker_compose_plugin() {
 
   if [[ -f "$config_file" ]]; then
     if jq -e ".cliPluginsExtraDirs // [] | index(\"$plugins_dir\")" "$config_file" &>/dev/null; then
-      success "Docker Compose 플러그인 경로 이미 설정됨"
+      success "Docker CLI 플러그인 경로 이미 설정됨"
       return
     fi
     warn "config.json 이미 존재 → 백업"
@@ -57,7 +65,7 @@ setup_docker_compose_plugin() {
     jq -n --arg dir "$plugins_dir" '{"cliPluginsExtraDirs": [$dir]}' > "$config_file"
   fi
 
-  success "Docker Compose 플러그인 경로 설정 완료 → $plugins_dir"
+  success "Docker CLI 플러그인 경로 설정 완료 → $plugins_dir"
 }
 
 # ───────────────────────────────────────────────────────
@@ -72,3 +80,12 @@ install_colima() {
     success "Colima 설치 완료"
   fi
 }
+
+# ───────────────────────────────────────────────────────
+#  단독 실행
+# ───────────────────────────────────────────────────────
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  install_docker
+  setup_docker_cli_plugins
+  install_colima
+fi
