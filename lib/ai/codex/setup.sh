@@ -55,18 +55,18 @@ setup_codex_skills() {
     dst_skill="$dst_root/$skill_name"
 
     if [[ -L "$dst_skill" ]] && [[ "$(readlink "$dst_skill")" == "$src_skill" ]]; then
-      ((kept_count++))
+      kept_count=$((kept_count + 1))
       continue
     fi
 
     if [[ -L "$dst_skill" ]] || [[ -e "$dst_skill" ]]; then
       warn "Codex Skills 이름 충돌로 스킵: $dst_skill"
-      ((skipped_count++))
+      skipped_count=$((skipped_count + 1))
       continue
     fi
 
     if ln -s "$src_skill" "$dst_skill"; then
-      ((linked_count++))
+      linked_count=$((linked_count + 1))
     else
       error "Codex Skills 연결 실패: $dst_skill"
     fi
@@ -81,7 +81,7 @@ setup_codex_skills() {
         if [[ ! -e "$target" ]]; then
           warn "Codex Skills stale 심링크 제거: $dst_skill"
           rm "$dst_skill"
-          ((removed_count++))
+          removed_count=$((removed_count + 1))
         fi
         ;;
     esac
