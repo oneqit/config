@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 다음 staged된 변경사항을 코드 리뷰해줘.
 
-1. 변경 파일 목록 확인
+1. 변경 파일 목록 및 변경 규모 확인
 ```
 git diff --staged --stat
 ```
@@ -48,7 +48,7 @@ git diff --staged
 
 ## 핵심 이슈
 
-### 🔴 이슈 제목 (카테고리: 버그/보안/성능/...)
+### 🔴 이슈 제목 (버그/보안/성능/...)
 - 문제: 무엇이 왜 문제인지
 - 위치: path/to/file.ts, path/to/other.ts 등 관련 파일
 - 개선: 권장 수정 방향 또는 개선 코드

@@ -35,7 +35,7 @@ git log -n 10 --no-merges --format="%s%n%n%b----------"
 ## 형식
 - 첫 줄: 수정 내용 전반을 간단 명료하게 한줄 요약
 - 빈 줄
-- 본문: 주요 변경사항부터 중요도 순으로 `-` 목록으로 작성 (가능한 경우 파일 이름을 본문에 포함)
+- 본문: 주요 변경사항부터 중요도 순으로 `-` 목록으로 작성. 각 항목은 `- 설명 (파일경로)` 형식으로 파일 경로를 괄호 suffix로 표기. 하나의 논리적 변경이 여러 파일에 걸치면 괄호 안에 쉼표로 나열: `- 설명 (path1, path2, path3)`
 - 빈 줄
 - 주석: 자잘한 참고사항은 `# `으로 시작하는 주석으로 하단에 작성 (git commit 시 무시됨)
 - 마지막 라인에 다음 구분자를 주석으로 추가
@@ -46,10 +46,10 @@ git log -n 10 --no-merges --format="%s%n%n%b----------"
 ```
 Fix login API crash when password is empty
 
-- Handle empty password input in auth/login_service.py
-- Add request validation in api/routes/login.py
+- Handle empty password input (auth/login_service.py)
+- Add request validation (api/routes/login.py)
 - Return proper 400 response instead of server error
-- Add unit test for empty password case in tests/test_login.py
+- Add unit test for empty password case (tests/test_login.py)
 
 # Prevents 500 error when client sends empty password
 # ========================================================================
@@ -59,8 +59,8 @@ Fix login API crash when password is empty
 ```
 feat: add image preview support to chafa.nvim
 
-- Implement image rendering using chafa in lua/chafa/renderer.lua
-- Add :ChafaPreview command for viewing images in buffer
+- Implement image rendering using chafa (lua/chafa/renderer.lua, lua/chafa/init.lua)
+- Add :ChafaPreview command for viewing images in buffer (lua/chafa/commands.lua)
 
 # Enables terminal image preview inside Neovim
 # ========================================================================
