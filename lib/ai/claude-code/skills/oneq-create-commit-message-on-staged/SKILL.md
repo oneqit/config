@@ -28,16 +28,18 @@ git log -n 10 --no-merges --format="%s%n%n%b----------"
 - 터미널 색상 코드(ANSI escape sequence) 없이 출력
 - 기존 커밋 메시지 형식을 참고하여, prefix 스타일을 유지
 - prefix 스타일이 명확하지 않다면 Conventional Commits 형식 사용
-- .env, 시크릿, 임시/디버그 코드 등이 staged에 포함된 경우 첫 줄 맨 앞에 `⚠️⚠️⚠️` 를 붙이고 위험 내용을 명시해줘
+- 기존 커밋 메시지가 영어면 영어로, 한글이면 한글로 작성 (혼용되어 있으면 최근 커밋 다수를 따름)
+- .env, 시크릿, 임시/디버그 코드 등이 staged에 포함된 경우 첫 줄 맨 앞에 `⚠️⚠️⚠️` 를 붙이고 위험 내용을 명시
 - 수정사항이 간단한 경우, 본문 내용 생략 가능
 
 ## 형식
-- 첫 줄: 수정 내용 전반을 간단 명료하게 한줄 요약
-- 빈 줄
-- 본문: 주요 변경사항부터 중요도 순으로 `-` 목록으로 작성 (가능한 경우 파일 이름을 본문에 포함)
-- 빈 줄
-- 주석: 자잘한 참고사항은 `# `으로 시작하는 주석으로 하단에 작성 (git commit 시 무시됨)
-- 마지막 라인에 다음 구분자를 주석으로 추가
+첫 줄: 수정 내용 전반을 간단 명료하게 한줄 요약
+(빈 줄)
+본문: 주요 변경사항부터 중요도 순으로 `- 설명 (파일)` 형식의 bullet 목록
+  · 파일은 상위 디렉토리 1~2개 + basename의 단축 경로 (예: `auth/login_service.py`)
+  · 여러 파일에 걸친 변경은 괄호 안에 쉼표로 나열: `(file1, file2, file3)`
+(빈 줄)
+# 참고사항을 주석으로 작성 (git commit 시 무시됨)
 # ========================================================================
 
 ## 예시
@@ -45,10 +47,10 @@ git log -n 10 --no-merges --format="%s%n%n%b----------"
 ```
 Fix login API crash when password is empty
 
-- Handle empty password input in auth/login_service.py
-- Add request validation in api/routes/login.py
+- Handle empty password input (auth/login_service.py)
+- Add request validation (api/routes/login.py)
 - Return proper 400 response instead of server error
-- Add unit test for empty password case in tests/test_login.py
+- Add unit test for empty password case (tests/test_login.py)
 
 # Prevents 500 error when client sends empty password
 # ========================================================================
@@ -58,8 +60,8 @@ Fix login API crash when password is empty
 ```
 feat: add image preview support to chafa.nvim
 
-- Implement image rendering using chafa in lua/chafa/renderer.lua
-- Add :ChafaPreview command for viewing images in buffer
+- Implement image rendering using chafa (lua/chafa/renderer.lua, lua/chafa/init.lua)
+- Add :ChafaPreview command for viewing images in buffer (lua/chafa/commands.lua)
 
 # Enables terminal image preview inside Neovim
 # ========================================================================
