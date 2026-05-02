@@ -229,7 +229,7 @@ main() {
   echo -e "    셸       → Oh My Zsh"
   echo -e "    폰트     → CaskaydiaMono Nerd Font, Noto Sans Mono CJK KR"
   echo -e "    앱       → Rectangle, Scroll Reverser"
-  echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node)"
+  echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node, go)"
   echo -e "    CLI 도구 → git-flow-next, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → Docker CLI, Docker Compose, Colima"
   echo -e "    AI CLI   → Claude Code, Codex CLI, Copilot CLI"

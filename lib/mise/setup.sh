@@ -20,7 +20,7 @@ install_mise() {
 #  mise 글로벌 런타임 설치
 # ───────────────────────────────────────────────────────
 setup_mise_runtimes() {
-  local tools=(rust uv java maven node kotlin)
+  local tools=(rust uv java maven node kotlin go)
 
   for tool in "${tools[@]}"; do
     if mise ls --installed "$tool" 2>/dev/null | grep -q "$tool"; then
