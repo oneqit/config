@@ -176,9 +176,12 @@ main() {
   section "AI CLI"
   install_claude_code
   setup_claude_skills
+  setup_claude_instructions
   install_codex
   setup_codex_skills
+  setup_codex_instructions
   install_copilot
+  setup_copilot_instructions
   install_gemini
 
   echo ""
@@ -192,7 +195,7 @@ main() {
   echo -e "    폰트     → CaskaydiaMono Nerd Font"
   echo -e "    CLI 도구 → git, zsh, vim, neovim, fastfetch, openssh, wget, curl, tmux, ripgrep, starship, lazygit, nodejs"
   echo -e "    Termux   → 한글 입력, 추가 키 커스터마이징"
-  echo -e "    AI CLI   → Claude Code, Codex CLI, Copilot CLI"
+  echo -e "    AI CLI   → Claude Code, Codex CLI, Copilot CLI (전역 지시사항 포함)"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
   echo -e "  ${YELLOW}※ 일부 설정은 Termux 앱 재시작 후 반영됩니다.${NC}"

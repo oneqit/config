@@ -90,7 +90,26 @@ setup_codex_skills() {
   success "Codex Skills 연결 완료 (신규: $linked_count, 유지: $kept_count, 스킵: $skipped_count, 제거: $removed_count)"
 }
 
+# ───────────────────────────────────────────────────────
+#  Codex 전역 지시사항 심링크 설정
+# ───────────────────────────────────────────────────────
+setup_codex_instructions() {
+  local src="$_CODEX_DIR/AGENTS.md"
+  local dst="$HOME/.codex/AGENTS.md"
+
+  if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
+    success "Codex 전역 지시사항 이미 연결됨"
+    return
+  fi
+
+  mkdir -p "$HOME/.codex"
+  [[ -f "$dst" && ! -L "$dst" ]] && cp "$dst" "${dst}.backup.$(date +%Y%m%d%H%M%S)"
+  ln -sf "$src" "$dst"
+  success "Codex 전역 지시사항 연결 완료"
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   install_codex
   setup_codex_skills
+  setup_codex_instructions
 fi

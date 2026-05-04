@@ -90,7 +90,26 @@ setup_claude_skills() {
   success "Claude Skills 연결 완료 (신규: $linked_count, 유지: $kept_count, 스킵: $skipped_count, 제거: $removed_count)"
 }
 
+# ───────────────────────────────────────────────────────
+#  Claude Code 전역 지시사항 심링크 설정
+# ───────────────────────────────────────────────────────
+setup_claude_instructions() {
+  local src="$_CLAUDE_CODE_DIR/CLAUDE.md"
+  local dst="$HOME/.claude/CLAUDE.md"
+
+  if [[ -L "$dst" ]] && [[ "$(readlink "$dst")" == "$src" ]]; then
+    success "Claude 전역 지시사항 이미 연결됨"
+    return
+  fi
+
+  mkdir -p "$HOME/.claude"
+  [[ -f "$dst" && ! -L "$dst" ]] && cp "$dst" "${dst}.backup.$(date +%Y%m%d%H%M%S)"
+  ln -sf "$src" "$dst"
+  success "Claude 전역 지시사항 연결 완료"
+}
+
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
   install_claude_code
   setup_claude_skills
+  setup_claude_instructions
 fi
