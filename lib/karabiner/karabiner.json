@@ -15,7 +15,13 @@
                 "to": [
                   { "key_code": "grave_accent_and_tilde" },
                   { "key_code": "grave_accent_and_tilde" },
-                  { "key_code": "grave_accent_and_tilde" }
+                  { "key_code": "grave_accent_and_tilde" },
+                  { "key_code": "return_or_enter", "modifiers": ["shift"] },
+                  { "key_code": "return_or_enter", "modifiers": ["shift"] },
+                  { "key_code": "grave_accent_and_tilde" },
+                  { "key_code": "grave_accent_and_tilde" },
+                  { "key_code": "grave_accent_and_tilde" },
+                  { "key_code": "up_arrow" }
                 ]
               }
             ]
