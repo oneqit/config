@@ -39,4 +39,5 @@ quick-terminal-animation-duration = 0
 # ─── 기타 ───
 macos-option-as-alt = true
 copy-on-select = clipboard
+mouse-scroll-multiplier = 0.7
 
