@@ -81,9 +81,10 @@ ql() {
   local root="$HOME/code/oneqit/daily-log"
   local file="$root/$(date +%Y/%m/%d)-${kr[$(date +%u)]}.md"
   if [[ -n "$TMUX" ]]; then
+    tmux rename-window daily-log
     builtin cd "$root" && nvim "$file"
   else
-    tmux new-session \; send-keys "cd ${(q)root} && nvim ${(q)file}" C-m
+    tmux new-session -n daily-log \; send-keys "cd ${(q)root} && nvim ${(q)file}" C-m
   fi
 }
 
