@@ -73,6 +73,21 @@ gaagc() {
 }
 
 # ═══════════════════════════════════════════════════════
+#  Daily log
+# ═══════════════════════════════════════════════════════
+# quick daily log: 오늘 날짜의 일지 파일을 nvim으로 연다
+ql() {
+  local kr=(월 화 수 목 금 토 일)
+  local root="$HOME/code/oneqit/daily-log"
+  local file="$root/$(date +%Y/%m/%d)-${kr[$(date +%u)]}.md"
+  if [[ -n "$TMUX" ]]; then
+    builtin cd "$root" && nvim "$file"
+  else
+    tmux new-session \; send-keys "cd ${(q)root} && nvim ${(q)file}" C-m
+  fi
+}
+
+# ═══════════════════════════════════════════════════════
 #  Extras — 아래에 추가한 설정은 init/setup 재실행 시에도 보존
 # ═══════════════════════════════════════════════════════
 
