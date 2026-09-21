@@ -48,6 +48,8 @@ tmux 밖에서는 새 세션 생성, tmux 안에서는 현재 창 분할. 인자
 
 예: `qlaude vim htop` — nvim 대신 vim, claude 대신 htop 실행
 
+실행 후 포커스는 오른쪽 상단 패널(claude/codex/copilot)에 위치
+
 ### SSH 자동 TERM 변환
 
 tmux 내에서 ssh 실행 시 TERM을 `xterm-256color`로 자동 변환 (원격 서버에 tmux terminfo가 없는 경우 대비)
