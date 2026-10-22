@@ -59,10 +59,11 @@ tmux 내에서 ssh 실행 시 TERM을 `xterm-256color`로 자동 변환 (원격 
 | 키 | 설명 |
 |---|---|
 | `Ctrl+a` 또는 `F1` | Prefix 키 (자동 영문 전환) |
-| `Prefix + \|` | 수평 분할 |
-| `Prefix + -` | 수직 분할 |
+| `Prefix + \|` 또는 `%` | 수평 분할 |
+| `Prefix + -` 또는 `"` | 수직 분할 |
 | `Prefix + h/j/k/l` | 패널 이동 (vi 스타일) |
 | `Prefix + 방향키` | 패널 크기 조절 |
+| `Prefix + <` / `>` | 윈도우를 왼쪽/오른쪽으로 이동 (순서 교체) |
 | `Prefix + Ctrl+a` | 프로그램에 Ctrl+a 전송 |
 | `Prefix + y` | 현재 디렉터리 클립보드 복사 |
 
