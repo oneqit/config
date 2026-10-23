@@ -54,5 +54,4 @@ _tmux_split() {
 
 qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}"; }
 qodex()   { _tmux_split "${1:-nvim}" "${2:-codex}"; }
-qopilot() { _tmux_split "${1:-nvim}" "${2:-copilot}"; }
-qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-copilot}"; }
+qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-codex}"; }

@@ -43,12 +43,11 @@ tmux 밖에서는 새 세션 생성, tmux 안에서는 현재 창 분할. 인자
 |---|---|
 | `qlaude` | 2분할: nvim + claude |
 | `qodex` | 2분할: nvim + codex |
-| `qopilot` | 2분할: nvim + copilot |
-| `qode` | 3분할: nvim + claude + copilot |
+| `qode` | 3분할: nvim + claude + codex |
 
 예: `qlaude vim htop` — nvim 대신 vim, claude 대신 htop 실행
 
-실행 후 포커스는 오른쪽 상단 패널(claude/codex/copilot)에 위치
+실행 후 포커스는 오른쪽 상단 패널(claude/codex)에 위치
 
 창 이름은 실행한 디렉터리명으로 설정 (예: `~/code`에서 실행 시 `code`)
 

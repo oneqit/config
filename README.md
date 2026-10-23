@@ -47,8 +47,7 @@ lib/
 ├── platform.sh      # 플랫폼 판별 함수
 ├── ai/
 │   ├── claude-code/ # Claude Code 셋업
-│   ├── codex/       # Codex CLI 셋업
-│   └── copilot/     # Copilot CLI 셋업
+│   └── codex/       # Codex CLI 셋업
 ├── docker/          # Docker 설치 셋업
 ├── ghostty/         # Ghostty 설정 + 셋업
 ├── karabiner/       # Karabiner-Elements 키매핑 설정
