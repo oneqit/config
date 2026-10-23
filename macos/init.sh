@@ -12,7 +12,6 @@ source "$REPO_DIR/lib/ghostty/setup.sh"
 source "$REPO_DIR/lib/karabiner/setup.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
-source "$REPO_DIR/lib/ai/gemini/setup.sh"
 source "$REPO_DIR/lib/mise/setup.sh"
 source "$REPO_DIR/lib/docker/setup.sh"
 
@@ -216,7 +215,6 @@ main() {
   install_codex
   setup_codex_skills
   setup_codex_instructions
-  install_gemini
 
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
