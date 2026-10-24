@@ -14,10 +14,10 @@ install_claude_code() {
   fi
 
   info "Claude Code 설치 중..."
-  if is_macos; then
-    curl -fsSL https://claude.ai/install.sh | bash
-  else
+  if is_termux; then
     npm install -g @anthropic-ai/claude-code
+  else
+    curl -fsSL https://claude.ai/install.sh | bash
   fi
   success "Claude Code 설치 완료"
 }

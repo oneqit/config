@@ -14,10 +14,10 @@ install_codex() {
   fi
 
   info "Codex CLI 설치 중..."
-  if is_macos; then
-    brew install codex
-  else
+  if is_termux; then
     npm install -g @openai/codex
+  else
+    curl -fsSL https://chatgpt.com/codex/install.sh | sh
   fi
   success "Codex CLI 설치 완료"
 }
