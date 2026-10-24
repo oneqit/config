@@ -36,7 +36,6 @@ install_packages() {
     ripgrep
     unzip
     jq
-    starship
     lazygit
     btop
     locales
@@ -114,6 +113,7 @@ main() {
   setup_zshrc
 
   section "Starship"
+  install_starship
   setup_starship_config
 
   section "셸 기본값"
