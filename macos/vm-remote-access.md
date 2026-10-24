@@ -62,8 +62,10 @@ sudo apt install -y openssh-server
 이 레포의 Linux 세팅으로 zsh, tmux, starship, mise, docker, claude, codex 등을 한 번에 설치한다.
 
 ```bash
+sudo apt install -y git
 git clone https://github.com/oneqit/config.git ~/.config/oneqit/config
-~/.config/oneqit/config/init.sh
+cd ~/.config/oneqit/config
+./init.sh
 ```
 
 기본 셸(zsh)과 docker 그룹은 재로그인 후 반영된다.
