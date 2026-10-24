@@ -2,6 +2,7 @@
 
 _MISE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$_MISE_DIR/../logging.sh"
+source "$_MISE_DIR/../platform.sh"
 
 # ───────────────────────────────────────────────────────
 #  mise 설치
@@ -11,7 +12,12 @@ install_mise() {
     success "mise 이미 설치됨"
   else
     info "mise 설치 중..."
-    brew install mise
+    if is_macos; then
+      brew install mise
+    else
+      curl -fsSL https://mise.run | sh
+      export PATH="$HOME/.local/bin:$PATH"  # 이어지는 mise 명령용 (~/.local/bin에 설치됨)
+    fi
     success "mise 설치 완료"
   fi
 }

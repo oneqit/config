@@ -17,10 +17,20 @@ is_macos() {
   [[ "$(uname -s)" == "Darwin" ]]
 }
 
+# Termux도 uname이 Linux라서 제외
+is_linux() {
+  [[ "$(uname -s)" == "Linux" ]] && ! is_termux
+}
+
 ensure_termux() {
   is_termux || error "이 스크립트는 Termux 환경에서 실행해야 합니다"
 }
 
 ensure_macos() {
   is_macos || error "이 스크립트는 macOS 환경에서 실행해야 합니다"
+}
+
+ensure_linux() {
+  is_linux || error "이 스크립트는 Linux 환경에서 실행해야 합니다"
+  command -v apt-get >/dev/null 2>&1 || error "apt 기반 배포판(Ubuntu/Debian)만 지원합니다"
 }
