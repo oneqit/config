@@ -168,14 +168,17 @@ ssh -o PubkeyAuthentication=no vm
 
 ### 4-1) tmux 안에서 VPN 연결
 
+세션은 하나만 두고, VPN은 그 세션의 윈도우 하나에서 띄운다.
+
 ```bash
 ssh vm
-tmux new -s vpn
+tmux attach || tmux new     # 기존 세션이 있으면 붙고, 없으면 생성
+tmux new-window -n vpn      # (tmux 안에서) VPN 전용 윈도우
 # VPN 클라이언트 연결 (클라이언트별 명령)
 # 연결되면 tmux에서 빠져나오기 (detach) → SSH를 닫아도 VPN 유지
 ```
 
-- 다시 보기: `ssh vm` 후 `tmux attach -t vpn`
+- 다시 보기: `ssh vm` 후 `tmux attach` → `vpn` 윈도우로 이동
 - ⚠️ SSH 셸에서 tmux 없이 바로 실행하면 VPN 클라이언트가 SSH 세션의 자식 프로세스가 되어, **창을 닫거나 SSH가 끊기는 순간 VPN도 끊긴다.**
 
 ### 4-2) HTTPS 검사하는 VPN이면 루트 인증서 설치
