@@ -17,7 +17,7 @@ install_codex() {
   if is_termux; then
     npm install -g @openai/codex
   else
-    curl -fsSL https://chatgpt.com/codex/install.sh | sh
+    curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
   fi
   success "Codex CLI 설치 완료"
 }
