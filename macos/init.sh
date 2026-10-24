@@ -46,7 +46,6 @@ install_packages() {
     "git-flow-next:git-flow"
     "neovim:nvim"
     "tmux:tmux"
-    "starship:starship"
     "ripgrep:rg"
     "btop:btop"
     "lazygit:lazygit"
@@ -192,6 +191,7 @@ main() {
   setup_zshrc
 
   section "Starship"
+  install_starship
   setup_starship_config
 
   section "tmux"
