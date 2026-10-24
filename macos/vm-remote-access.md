@@ -170,7 +170,6 @@ ssh -o PubkeyAuthentication=no vm
 
 ```bash
 ssh vm
-sudo apt install -y tmux curl
 tmux new -s vpn
 # VPN 클라이언트 연결 (클라이언트별 명령)
 # 연결되면 tmux에서 빠져나오기 (detach) → SSH를 닫아도 VPN 유지
