@@ -39,6 +39,7 @@ install_packages() {
     starship
     lazygit
     btop
+    locales
   )
 
   for pkg_name in "${packages[@]}"; do
@@ -50,6 +51,24 @@ install_packages() {
       success "$pkg_name 설치 완료"
     fi
   done
+}
+
+# ───────────────────────────────────────────────────────
+#  한국어 로케일 생성 (macOS ssh가 LANG=ko_KR.UTF-8을 넘기고 tmux 함수도 사용)
+# ───────────────────────────────────────────────────────
+setup_locale() {
+  if locale -a 2>/dev/null | grep -qi '^ko_KR\.utf-\?8$'; then
+    success "ko_KR.UTF-8 로케일 이미 생성됨"
+    return
+  fi
+
+  info "ko_KR.UTF-8 로케일 생성 중..."
+  # Debian은 locale-gen 인자를 무시하고 /etc/locale.gen만 읽음
+  if [[ -f /etc/locale.gen ]]; then
+    sudo sed -i 's/^# *\(ko_KR\.UTF-8 UTF-8\)/\1/' /etc/locale.gen
+  fi
+  sudo locale-gen ko_KR.UTF-8
+  success "ko_KR.UTF-8 로케일 생성 완료"
 }
 
 # ───────────────────────────────────────────────────────
@@ -86,6 +105,9 @@ main() {
 
   section "패키지 설치"
   install_packages
+
+  section "로케일"
+  setup_locale
 
   section "Oh My Zsh"
   install_oh_my_zsh
