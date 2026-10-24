@@ -59,6 +59,15 @@ setup_mise_settings() {
       success "idiomatic_version_file: $tool 추가 완료"
     fi
   done
+
+  # HTTP 요청 실패 시 재시도 횟수 (기본값 3 → 1)
+  if [[ "$(mise settings get http_retries 2>/dev/null)" == "1" ]]; then
+    success "http_retries: 이미 설정됨 (1)"
+  else
+    info "http_retries: 1 설정 중..."
+    mise settings set http_retries 1
+    success "http_retries: 1 설정 완료"
+  fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then

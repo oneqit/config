@@ -21,8 +21,11 @@ ssh() {
 }
 
 # _tmux_split cmd_left cmd_right [cmd_right_bottom]
+#   Names the window after the current directory and ends with the top-right pane focused.
 _tmux_split() {
   _tmux_env
+  local name="${PWD:t}"
+  local focus=(\; select-pane -t '{top-right}')
   local cmd1="$1" cmd2="$2" cmd3="$3"
   local right_cmds=(
     send-keys "$cmd2" C-m \;
@@ -33,20 +36,22 @@ _tmux_split() {
     select_left=(select-pane -t '{left}')
   fi
   if [[ -n "$TMUX" ]]; then
-    tmux split-window -h -l 50% \; \
+    tmux rename-window "$name" \; \
+      split-window -h -l 50% \; \
       "${right_cmds[@]}" \
       "${select_left[@]}" \; \
-      send-keys "$cmd1" C-m
+      send-keys "$cmd1" C-m \
+      "${focus[@]}"
   else
-    tmux new-session \; \
+    tmux new-session -n "$name" \; \
       send-keys "$cmd1" C-m \; \
       split-window -h -l 50% \; \
       "${right_cmds[@]}" \
-      "${select_left[@]}"
+      "${select_left[@]}" \
+      "${focus[@]}"
   fi
 }
 
 qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}"; }
 qodex()   { _tmux_split "${1:-nvim}" "${2:-codex}"; }
-qopilot() { _tmux_split "${1:-nvim}" "${2:-copilot}"; }
-qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-copilot}"; }
+qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-codex}"; }

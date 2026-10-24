@@ -11,6 +11,7 @@ main() {
     target="$SCRIPT_DIR/termux/init.sh"
   elif is_macos; then
     target="$SCRIPT_DIR/macos/init.sh"
+  # TODO: Linux 지원
   else
     error "지원하지 않는 OS입니다: $(uname -s) (지원 환경: macOS, Termux)"
   fi

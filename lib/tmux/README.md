@@ -43,10 +43,13 @@ tmux 밖에서는 새 세션 생성, tmux 안에서는 현재 창 분할. 인자
 |---|---|
 | `qlaude` | 2분할: nvim + claude |
 | `qodex` | 2분할: nvim + codex |
-| `qopilot` | 2분할: nvim + copilot |
-| `qode` | 3분할: nvim + claude + copilot |
+| `qode` | 3분할: nvim + claude + codex |
 
 예: `qlaude vim htop` — nvim 대신 vim, claude 대신 htop 실행
+
+실행 후 포커스는 오른쪽 상단 패널(claude/codex)에 위치
+
+창 이름은 실행한 디렉터리명으로 설정 (예: `~/code`에서 실행 시 `code`)
 
 ### SSH 자동 TERM 변환
 
@@ -57,10 +60,11 @@ tmux 내에서 ssh 실행 시 TERM을 `xterm-256color`로 자동 변환 (원격 
 | 키 | 설명 |
 |---|---|
 | `Ctrl+a` 또는 `F1` | Prefix 키 (자동 영문 전환) |
-| `Prefix + \|` | 수평 분할 |
-| `Prefix + -` | 수직 분할 |
+| `Prefix + \|` 또는 `%` | 수평 분할 |
+| `Prefix + -` 또는 `"` | 수직 분할 |
 | `Prefix + h/j/k/l` | 패널 이동 (vi 스타일) |
 | `Prefix + 방향키` | 패널 크기 조절 |
+| `Prefix + <` / `>` | 윈도우를 왼쪽/오른쪽으로 이동 (순서 교체) |
 | `Prefix + Ctrl+a` | 프로그램에 Ctrl+a 전송 |
 | `Prefix + y` | 현재 디렉터리 클립보드 복사 |
 

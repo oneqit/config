@@ -2,6 +2,18 @@
 
 초기 환경 세팅 스크립트
 
+## 개요
+
+새 OS에서 `./init.sh` 한 번 실행으로 개발 환경 전체를 세팅하기 위한 프로젝트.
+
+### 지원 플랫폼
+
+| 플랫폼 | 지원 수준 | 현재 상태 |
+|---|---|---|
+| macOS | 필수 | 지원 |
+| Linux | 필수 | TODO (`init.sh`에서 아직 분기하지 않음) |
+| Termux (Android) | 일부 지원 | 셸·터미널 도구, AI CLI만 세팅 (GUI 앱, mise, Docker 제외) |
+
 ## 설치
 
 ### HTTPS
@@ -47,8 +59,7 @@ lib/
 ├── platform.sh      # 플랫폼 판별 함수
 ├── ai/
 │   ├── claude-code/ # Claude Code 셋업
-│   ├── codex/       # Codex CLI 셋업
-│   └── copilot/     # Copilot CLI 셋업
+│   └── codex/       # Codex CLI 셋업
 ├── docker/          # Docker 설치 셋업
 ├── ghostty/         # Ghostty 설정 + 셋업
 ├── karabiner/       # Karabiner-Elements 키매핑 설정

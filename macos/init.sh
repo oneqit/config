@@ -12,8 +12,6 @@ source "$REPO_DIR/lib/ghostty/setup.sh"
 source "$REPO_DIR/lib/karabiner/setup.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
-source "$REPO_DIR/lib/ai/copilot/setup.sh"
-source "$REPO_DIR/lib/ai/gemini/setup.sh"
 source "$REPO_DIR/lib/mise/setup.sh"
 source "$REPO_DIR/lib/docker/setup.sh"
 
@@ -217,9 +215,6 @@ main() {
   install_codex
   setup_codex_skills
   setup_codex_instructions
-  install_copilot
-  setup_copilot_instructions
-  install_gemini
 
   echo ""
   echo -e "${GREEN}═══════════════════════════════════════════${NC}"
@@ -235,7 +230,7 @@ main() {
   echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node, go)"
   echo -e "    CLI 도구 → git-flow-next, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → Docker CLI, Docker Compose, Colima"
-  echo -e "    AI CLI   → Claude Code, Codex CLI, Copilot CLI (전역 지시사항 포함)"
+  echo -e "    AI CLI   → Claude Code, Codex CLI (전역 지시사항 포함)"
   echo -e "    키보드   → 키 반복 입력, 한영 백틱(\`), Karabiner (⌥R→F18)"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
