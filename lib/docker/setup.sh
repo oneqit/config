@@ -2,6 +2,7 @@
 
 _DOCKER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$_DOCKER_DIR/../logging.sh"
+source "$_DOCKER_DIR/../platform.sh"
 
 # ───────────────────────────────────────────────────────
 #  Docker CLI 설치
@@ -82,10 +83,39 @@ install_colima() {
 }
 
 # ───────────────────────────────────────────────────────
+#  Docker Engine 설치 (Linux, apt)
+# ───────────────────────────────────────────────────────
+install_docker_engine() {
+  local packages=(docker.io docker-compose-v2 docker-buildx)
+
+  for pkg_name in "${packages[@]}"; do
+    if dpkg -s "$pkg_name" &>/dev/null; then
+      success "$pkg_name 이미 설치됨"
+    else
+      info "$pkg_name 설치 중..."
+      sudo apt-get install -y "$pkg_name"
+      success "$pkg_name 설치 완료"
+    fi
+  done
+
+  if id -nG "$USER" | grep -qw docker; then
+    success "docker 그룹 이미 설정됨"
+  else
+    info "$USER 를 docker 그룹에 추가 중..."
+    sudo usermod -aG docker "$USER"
+    success "docker 그룹 추가 완료 (재로그인 후 sudo 없이 docker 사용 가능)"
+  fi
+}
+
+# ───────────────────────────────────────────────────────
 #  단독 실행
 # ───────────────────────────────────────────────────────
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-  install_docker
-  setup_docker_cli_plugins
-  install_colima
+  if is_linux; then
+    install_docker_engine
+  else
+    install_docker
+    setup_docker_cli_plugins
+    install_colima
+  fi
 fi
