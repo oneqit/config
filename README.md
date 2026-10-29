@@ -44,6 +44,7 @@ cd ~/.config/oneqit/config
 ./lib/ghostty/setup.sh   # Ghostty 터미널 (macOS)
 ./lib/docker/setup.sh    # Docker 설치 (macOS: CLI + Colima / Linux: Docker Engine)
 ./lib/karabiner/setup.sh # Karabiner-Elements 키매핑 (macOS)
+./lib/linearmouse/setup.sh # LinearMouse 마우스 스크롤 반전 (macOS)
 ./lib/mise/setup.sh      # mise 런타임 매니저
 ```
 
@@ -63,6 +64,7 @@ lib/
 ├── docker/          # Docker 설치 셋업
 ├── ghostty/         # Ghostty 설정 + 셋업
 ├── karabiner/       # Karabiner-Elements 키매핑 설정
+├── linearmouse/     # LinearMouse 마우스 스크롤 반전 설정
 ├── mise/            # mise 런타임 매니저 셋업
 ├── starship/        # Starship 설정 + 셋업
 ├── tmux/            # tmux 설정 + 셋업

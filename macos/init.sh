@@ -10,6 +10,7 @@ source "$REPO_DIR/lib/starship/setup.sh"
 source "$REPO_DIR/lib/tmux/setup.sh"
 source "$REPO_DIR/lib/ghostty/setup.sh"
 source "$REPO_DIR/lib/karabiner/setup.sh"
+source "$REPO_DIR/lib/linearmouse/setup.sh"
 source "$REPO_DIR/lib/ai/claude-code/setup.sh"
 source "$REPO_DIR/lib/ai/codex/setup.sh"
 source "$REPO_DIR/lib/mise/setup.sh"
@@ -93,7 +94,6 @@ install_apps() {
   # cask명:앱이름
   local apps=(
     "rectangle:Rectangle"
-    "scroll-reverser:Scroll Reverser"
   )
 
   for entry in "${apps[@]}"; do
@@ -119,24 +119,6 @@ setup_macos_defaults() {
     info "키 반복 입력 활성화..."
     defaults write -g ApplePressAndHoldEnabled -bool false
     success "키 반복 입력 활성화 완료"
-  fi
-}
-
-# ───────────────────────────────────────────────────────
-#  Scroll Reverser 설정
-# ───────────────────────────────────────────────────────
-setup_scroll_reverser() {
-  local sr="com.pilotmoon.scroll-reverser"
-  if [[ "$(defaults read "$sr" ReverseMouse 2>/dev/null)" == "1" ]]; then
-    success "Scroll Reverser 이미 설정됨"
-  else
-    info "Scroll Reverser 설정 중..."
-    defaults write "$sr" ReverseMouse -bool true
-    defaults write "$sr" ReverseTrackpad -bool false
-    defaults write "$sr" ReverseX -bool true
-    defaults write "$sr" ReverseY -bool true
-    defaults write "$sr" HideIcon -bool true
-    success "Scroll Reverser 설정 완료 (마우스 수평/수직 반전, 아이콘 숨김)"
   fi
 }
 
@@ -172,7 +154,9 @@ main() {
   install_apps
 
   section "마우스"
-  setup_scroll_reverser
+  install_linearmouse
+  setup_linearmouse_config
+  setup_natural_scrolling
 
   section "키보드"
   setup_macos_defaults
@@ -226,7 +210,8 @@ main() {
   echo -e "    프롬프트 → Starship"
   echo -e "    셸       → Oh My Zsh"
   echo -e "    폰트     → CaskaydiaMono Nerd Font, Noto Sans Mono CJK KR"
-  echo -e "    앱       → Rectangle, Scroll Reverser"
+  echo -e "    앱       → Rectangle"
+  echo -e "    마우스   → LinearMouse (마우스만 수평/수직 스크롤 반전)"
   echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node, go)"
   echo -e "    CLI 도구 → git-flow-next, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → Docker CLI, Docker Compose, Colima"
@@ -235,7 +220,7 @@ main() {
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
   echo -e "  ${YELLOW}[!] 수동 설정 필요:${NC}"
-  echo -e "    Scroll Reverser → 활성화, 로그인 시 시작"
+  echo -e "    LinearMouse → 손쉬운 사용 권한 허용, 로그인 시 시작"
   echo -e "    Karabiner → Simple Modifications에서 right_command → F18 추가"
   echo -e "    Rectangle → 로그인 시 실행, 메뉴 막대 아이콘 숨김"
   echo -e "    시스템 설정 → 키보드"

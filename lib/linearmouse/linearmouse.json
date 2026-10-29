@@ -1,0 +1,17 @@
+{
+  "schemes": [
+    {
+      "if": {
+        "device": {
+          "category": "mouse"
+        }
+      },
+      "scrolling": {
+        "reverse": {
+          "vertical": true,
+          "horizontal": true
+        }
+      }
+    }
+  ]
+}
