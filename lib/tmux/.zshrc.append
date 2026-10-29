@@ -53,5 +53,5 @@ _tmux_split() {
 }
 
 qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}"; }
-qodex()   { _tmux_split "${1:-nvim}" "${2:-codex}"; }
-qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-codex}"; }
+qodex()   { _tmux_split "${1:-nvim}" "${2:-codex --dangerously-bypass-approvals-and-sandbox}"; }
+qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-codex --dangerously-bypass-approvals-and-sandbox}"; }
