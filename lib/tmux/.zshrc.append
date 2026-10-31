@@ -80,5 +80,15 @@ rt() {
   fi
 }
 
-qseq() { rt seqretary 'cd ~/code/oneqit/seqretary && tmux split-window -hbd -l 50% -c ~/code/oneqit/seqretary && codex resume --last --dangerously-bypass-approvals-and-sandbox'; }
+# qseq [claude|codex]: seqretary on the remote host — shell on the left, the agent resuming its last session on the right.
+#   Each agent gets its own window (seqretary-<agent>).
+qseq() {
+  local agent="${1:-claude}" cmd
+  case "$agent" in
+    claude) cmd='claude --allow-dangerously-skip-permissions --continue' ;;
+    codex)  cmd='codex resume --last --dangerously-bypass-approvals-and-sandbox' ;;
+    *) echo "usage: qseq [claude|codex]" >&2; return 1 ;;
+  esac
+  rt "seqretary-$agent" "cd ~/code/oneqit/seqretary && tmux split-window -hbd -l 50% -c ~/code/oneqit/seqretary && $cmd"
+}
 qmon() { rt snowball-monitor 'cd ~/code/oneqit/snowball && uv run python -m bot.monitor'; }
