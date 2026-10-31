@@ -193,6 +193,9 @@ main() {
   echo -e "    AI CLI   → Claude Code, Codex CLI (전역 지시사항 포함)"
   echo -e "    tmux     → 설정 + 셸 함수"
   echo ""
+  echo -e "  ${YELLOW}[!] 수동 설정 필요:${NC}"
+  echo -e "    ~/.ssh/config → Host remote (원격 호스트 주소·포트·계정) 추가 (rt용, lib/tmux/README.md 참고)"
+  echo ""
   echo -e "  ${YELLOW}※ 일부 설정은 Termux 앱 재시작 후 반영됩니다.${NC}"
   echo ""
 }

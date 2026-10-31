@@ -55,3 +55,10 @@ _tmux_split() {
 qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}"; }
 qodex()   { _tmux_split "${1:-nvim}" "${2:-codex --dangerously-bypass-approvals-and-sandbox}"; }
 qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-codex --dangerously-bypass-approvals-and-sandbox}"; }
+
+# rt session cmd: attach to a tmux session on the remote host (Host remote in ~/.ssh/config), creating it with cmd if missing.
+#   cmd must not contain quotes; pass it single-quoted so ~ expands on the remote side.
+rt() { ssh -t remote "zsh -lic 't -A -s $1 \"$2\"'"; }
+
+qseq() { rt seqretary 'cd ~/code/oneqit/seqretary && claude --allow-dangerously-skip-permissions --continue'; }
+qmon() { rt snowball-monitor 'cd ~/code/oneqit/snowball && uv run python -m bot.monitor'; }
