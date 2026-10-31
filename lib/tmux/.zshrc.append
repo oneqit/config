@@ -56,9 +56,29 @@ qlaude()  { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permi
 qodex()   { _tmux_split "${1:-nvim}" "${2:-codex --dangerously-bypass-approvals-and-sandbox}"; }
 qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-codex --dangerously-bypass-approvals-and-sandbox}"; }
 
-# rt session cmd: attach to a tmux session on the remote host (Host remote in ~/.ssh/config), creating it with cmd if missing.
+# rt name cmd: go to the tmux window <name> on the remote host (Host remote in ~/.ssh/config; directly when run on that host),
+#   opening it with cmd in the existing session if missing.
 #   cmd must not contain quotes; pass it single-quoted so ~ expands on the remote side.
-rt() { ssh -t remote "zsh -lic 't -A -s $1 \"$2\"'"; }
+rt() {
+  if [[ "$(command ssh -G remote 2>/dev/null | awk '/^hostname /{print $2}')" != remote ]]; then
+    ssh -t remote "zsh -lic 'rt $1 \"$2\"'"
+    return
+  fi
+  _tmux_env
+  local win=$(tmux list-windows -a -F '#{session_name}:#{window_index} #{window_name}' 2>/dev/null | awk -v n="$1" '$2 == n {print $1; exit}')
+  if [[ -z "$win" ]]; then
+    if ! tmux has-session 2>/dev/null; then
+      tmux new -n "$1" "$2"
+      return
+    fi
+    win=$(tmux new-window -d -P -F '#{session_name}:#{window_index}' -n "$1" "$2")
+  fi
+  if [[ -n "$TMUX" ]]; then
+    tmux switch-client -t "$win"
+  else
+    tmux attach -t "$win"
+  fi
+}
 
 qseq() { rt seqretary 'cd ~/code/oneqit/seqretary && claude --allow-dangerously-skip-permissions --continue'; }
 qmon() { rt snowball-monitor 'cd ~/code/oneqit/snowball && uv run python -m bot.monitor'; }
