@@ -62,7 +62,8 @@ format = '[ $duration]($style) '
 disabled = false
 
 [custom.ssh]
-when = '[ -n "$SSH_CONNECTION" ]'
-command = "echo $SSH_CONNECTION | awk '{print $3}'"
+# Inside tmux, read the session env, which tmux refreshes from the client on each attach (update-environment)
+when = '''{ if [ -n "$TMUX" ]; then tmux show-env SSH_CONNECTION 2>/dev/null | sed -n 's/^SSH_CONNECTION=//p'; else echo "$SSH_CONNECTION"; fi; } | grep -q .'''
+command = '''{ if [ -n "$TMUX" ]; then tmux show-env SSH_CONNECTION 2>/dev/null | sed -n 's/^SSH_CONNECTION=//p'; else echo "$SSH_CONNECTION"; fi; } | awk '{print $3}''''
 style = 'bold #ff9e64'
 format = '[󰌘 $output]($style) '
