@@ -80,5 +80,5 @@ rt() {
   fi
 }
 
-qseq() { rt seqretary 'cd ~/code/oneqit/seqretary && claude --allow-dangerously-skip-permissions --continue'; }
+qseq() { rt seqretary 'cd ~/code/oneqit/seqretary && tmux split-window -hbd -l 50% -c ~/code/oneqit/seqretary && codex resume --last --dangerously-bypass-approvals-and-sandbox'; }
 qmon() { rt snowball-monitor 'cd ~/code/oneqit/snowball && uv run python -m bot.monitor'; }
