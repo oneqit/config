@@ -57,7 +57,7 @@ qodex()   { _tmux_split "${1:-nvim}" "${2:-codex --dangerously-bypass-approvals-
 qode()    { _tmux_split "${1:-nvim}" "${2:-claude --allow-dangerously-skip-permissions}" "${3:-codex --dangerously-bypass-approvals-and-sandbox}"; }
 
 # rt name cmd: go to the tmux window <name> on the remote host (Host remote in ~/.ssh/config; directly when run on that host),
-#   opening it with cmd in the existing session if missing.
+#   opening it with cmd in the existing session if missing. When reached by attaching, cmd exiting detaches the client.
 #   cmd must not contain quotes; pass it single-quoted so ~ expands on the remote side.
 rt() {
   if [[ "$(command ssh -G remote 2>/dev/null | awk '/^hostname /{print $2}')" != remote ]]; then
@@ -71,12 +71,12 @@ rt() {
       tmux new -n "$1" "$2"
       return
     fi
-    win=$(tmux new-window -d -P -F '#{session_name}:#{window_index}' -n "$1" "$2")
+    win=$(tmux new-window -d -P -F '#{session_name}:#{window_index}' -n "$1" "$2; [ \"\$(tmux show -wqv @rt_detach)\" = 1 ] && tmux detach-client")
   fi
   if [[ -n "$TMUX" ]]; then
-    tmux switch-client -t "$win"
+    tmux set -wu -t "$win" @rt_detach \; switch-client -t "$win"
   else
-    tmux attach -t "$win"
+    tmux set -w -t "$win" @rt_detach 1 \; attach -t "$win"
   fi
 }
 
