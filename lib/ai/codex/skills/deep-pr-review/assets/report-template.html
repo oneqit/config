@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PR #{번호} 리뷰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* 레이아웃: 결론 띠 → before/after 두 장(넓으면 나란히) → 여섯 관점의 지적 카드 → 질문 · 확인한 것. 리뷰 문서라 장식 없이 정보 위계로 */
+:root {
+  --bg: #f5f6f8; --surface: #ffffff; --sunken: #eef0f3;
+  --fg: #1a1e26; --muted: #5a6271; --line: #d8dce3;
+  --new: #16754f; --new-soft: #e2f3ea;
+  --mod: #2d5bc4; --mod-soft: #e5ebfa;
+  --high: #b8322a; --high-soft: #fbe7e5;
+  --mid: #a35f00; --mid-soft: #fbefd9;
+  --low: #4c5767; --low-soft: #e9ecf0;
+  --opt: #6a7280; --dec: #6d3fd6; --dec-soft: #eee7fc;
+  --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111419; --surface: #191d24; --sunken: #14181e;
+  --fg: #e5e8ee; --muted: #9aa2b1; --line: #2b313b;
+  --new: #4fc48d; --new-soft: #15301f; --mod: #86a6ff; --mod-soft: #1b2847;
+  --high: #ff7f73; --high-soft: #3a1a17; --mid: #f0a845; --mid-soft: #35270f;
+  --low: #a9b2c0; --low-soft: #232933; --opt: #8b93a1; --dec: #b9a0ff; --dec-soft: #2a2145;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111419; --surface: #191d24; --sunken: #14181e;
+  --fg: #e5e8ee; --muted: #9aa2b1; --line: #2b313b;
+  --new: #4fc48d; --new-soft: #15301f; --mod: #86a6ff; --mod-soft: #1b2847;
+  --high: #ff7f73; --high-soft: #3a1a17; --mid: #f0a845; --mid-soft: #35270f;
+  --low: #a9b2c0; --low-soft: #232933; --opt: #8b93a1; --dec: #b9a0ff; --dec-soft: #2a2145;
+  color-scheme: dark }
+
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.65; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 40px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.3; }
+h1 { font-size: 1.75rem; font-weight: 700; }
+h2 { font-size: 1.25rem; font-weight: 700; }
+h3 { font-size: 1rem; font-weight: 600; }
+p { margin: 0; }
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+code { background: var(--sunken); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+.eyebrow { font-size: 0.78rem; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+.muted { color: var(--muted); }
+
+/* 머리 */
+header { display: grid; gap: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 0.86rem; }
+.meta span { font-variant-numeric: tabular-nums; }
+
+/* 결론 */
+.verdict { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px 22px; display: grid; gap: 14px; }
+.verdict .line { font-size: 1.08rem; font-weight: 600; }
+.verdict ol { margin: 0; padding-left: 1.3em; display: grid; gap: 4px; }
+.counts { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* 심각도 칩 */
+.sev { display: inline-flex; align-items: center; gap: 6px; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.02em;
+  padding: 2px 9px; border-radius: 999px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sev.high { color: var(--high); background: var(--high-soft); }
+.sev.mid { color: var(--mid); background: var(--mid-soft); }
+.sev.low { color: var(--low); background: var(--low-soft); }
+.sev.opt { color: var(--opt); background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.sev.dec { color: var(--dec); background: var(--dec-soft); }
+
+/* before/after */
+.flow { display: grid; gap: 14px; }
+.flow-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 980px) { .flow-grid { grid-template-columns: 1fr 1fr; } }
+figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 14px 12px; display: grid; gap: 10px; min-width: 0; }
+figure .tag { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; color: var(--muted); }
+.svg-box { overflow-x: auto; }
+.svg-box svg { display: block; width: 100%; min-width: 520px; height: auto; color: var(--fg); }
+figcaption { font-size: 0.88rem; color: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.82rem; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; border: 1.5px solid; }
+.legend .l-new { background: var(--new-soft); border-color: var(--new); }
+.legend .l-mod { background: var(--mod-soft); border-color: var(--mod); }
+.legend .l-warn { background: var(--high-soft); border-color: var(--high); }
+.legend .l-none { background: transparent; border-color: var(--line); border-style: dashed; }
+.change-list { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 0.92rem; }
+
+/* SVG 칸 · 글 — 페이지 토큰으로 */
+svg .n { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+svg .n-new { fill: var(--new-soft); stroke: var(--new); stroke-width: 1.5; }
+svg .n-mod { fill: var(--mod-soft); stroke: var(--mod); stroke-width: 1.5; }
+svg .n-warn { stroke: var(--high); stroke-width: 2; }
+svg .n-none { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 5 4; }
+svg .t { fill: var(--fg); font-family: var(--font-body); font-size: 12.5px; font-weight: 600; }
+svg .s { fill: var(--muted); font-family: var(--font-body); font-size: 10.5px; }
+svg .lane { fill: var(--muted); font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+svg .el { fill: var(--muted); font-family: var(--font-body); font-size: 10px; }
+svg .edge { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+svg .lanebg { fill: var(--sunken); }
+svg .pin { fill: var(--high); }
+svg .pin-t { fill: var(--surface); font-family: var(--font-body); font-size: 10px; font-weight: 700; }
+svg .warn-t { fill: var(--high); font-family: var(--font-body); font-size: 10.5px; font-weight: 600; }
+svg .ah { fill: var(--muted); }
+
+/* 관점 섹션 */
+section.lens { display: grid; gap: 14px; }
+.lens-head { display: grid; gap: 4px; }
+.lens-head .q { color: var(--muted); font-size: 0.92rem; max-width: 72ch; }
+.cards { display: grid; gap: 10px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; display: grid; gap: 8px; min-width: 0; }
+.card-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+.card-top .id { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.card .loc { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
+.card dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; font-size: 0.92rem; }
+.card dt { color: var(--muted); font-weight: 600; font-size: 0.82rem; padding-top: 2px; }
+.card dd { margin: 0; min-width: 0; max-width: 78ch; }
+@media (max-width: 560px) { .card dl { grid-template-columns: 1fr; gap: 2px; } .card dd { margin-bottom: 6px; } }
+.none { color: var(--muted); font-size: 0.92rem; padding: 4px 0; }
+
+/* 질문 · 확인 · 대조 */
+.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 18px; }
+details summary { cursor: pointer; font-weight: 600; }
+details[open] summary { margin-bottom: 10px; }
+summary:focus-visible, a:focus-visible { outline: 2px solid var(--mod); outline-offset: 2px; }
+.table-box { overflow-x: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.03em; }
+tr:last-child td { border-bottom: 0; }
+.hit { font-weight: 600; white-space: nowrap; }
+.hit.y { color: var(--new); } .hit.p { color: var(--mid); } .hit.n { color: var(--muted); }
+footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
+</style>
+</head>
+<body>
+
+<!--
+  deep-pr-review 결과 페이지 템플릿.
+  - {중괄호} 자리를 채우고, 예시 카드 · 예시 SVG 칸은 지우거나 바꾼다. 주석은 지운다.
+  - 스타일 · 토큰은 그대로 쓴다(라이트/다크 둘 다 정의됨).
+  - 심각도 칩: sev high(높음) · mid(중간) · low(낮음) · opt(선택) · dec(결정 필요)
+  - 그림 칸 클래스: n(그대로) · n-new(새로 생김) · n-mod(동작이 바뀜) · n-none(없음, 점선) · 지적이 걸리면 n-warn 을 더하고 pin 원에 지적 번호
+  - before/after 는 같은 viewBox · 같은 레인 위치로 그려 나란히 비교되게 한다. 마커 id 는 두 SVG 가 달라야 한다(ah-before · ah-after)
+-->
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">{ORG/REPO} · PULL REQUEST #{번호}</div>
+  <h1>{PR 제목}</h1>
+  <div class="meta">
+    <span>작성 {작성자}</span>
+    <span>head <span class="mono">{head 8자}</span> · base {브랜치} <span class="mono">{base 8자}</span></span>
+    <span>{파일 수} 파일 · +{추가} / −{삭제} · 커밋 {수}</span>
+    <span>리뷰 {날짜}</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <p class="line">{머지 가능 여부 한 문장}</p>
+  <ol>
+    <li>{배포 전 필수 조건} <span class="muted">({지적 번호})</span></li>
+  </ol>
+  <div class="counts">
+    <span class="sev high">높음 {n}</span>
+    <span class="sev mid">중간 {n}</span>
+    <span class="sev dec">결정 필요 {n}</span>
+    <span class="sev low">낮음 {n}</span>
+    <span class="sev opt">선택 {n}</span>
+  </div>
+</div>
+
+<section class="flow" aria-labelledby="flow-h">
+  <h2 id="flow-h">코드가 하는 일 — before / after</h2>
+  <div class="legend">
+    <span><i class="l-new"></i>새로 생김</span>
+    <span><i class="l-mod"></i>동작이 바뀜</span>
+    <span><i class="l-warn"></i>지적이 걸린 곳 (번호)</span>
+    <span><i class="l-none"></i>없음</span>
+  </div>
+  <div class="flow-grid">
+    <figure>
+      <div class="tag">BEFORE · {base 브랜치} {base 8자}</div>
+      <div class="svg-box">
+      <svg viewBox="0 0 560 {높이}" role="img" aria-label="{변경 전 흐름 한 문장}">
+        <defs><marker id="ah-before" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+        <!-- 레인 하나: 배경 · 제목 · 칸 셋(x 12 / 196 / 398, 폭 150 / 168 / 150) · 화살표 -->
+        <rect class="lanebg" x="0" y="8" width="560" height="104" rx="8"/>
+        <text class="lane" x="12" y="26">{모듈 · 흐름 이름}</text>
+        <rect class="n" x="12" y="38" width="150" height="46" rx="6"/><text class="t" x="24" y="58">{진입점}</text><text class="s" x="24" y="74">{한 줄}</text>
+        <rect class="n" x="196" y="38" width="168" height="46" rx="6"/><text class="t" x="208" y="58">{처리}</text><text class="s" x="208" y="74">{한 줄}</text>
+        <rect class="n" x="398" y="38" width="150" height="46" rx="6"/><text class="t" x="410" y="58">{저장소 · 외부}</text><text class="s" x="410" y="74">{한 줄}</text>
+        <line class="edge" x1="162" y1="61" x2="194" y2="61" marker-end="url(#ah-before)"/>
+        <line class="edge" x1="364" y1="61" x2="396" y2="61" marker-end="url(#ah-before)"/>
+        <text class="el" x="366" y="54">{동사}</text>
+      </svg>
+      </div>
+      <figcaption>{변경 전 동작 한두 문장}</figcaption>
+    </figure>
+    <figure>
+      <div class="tag">AFTER · PR head {head 8자}</div>
+      <div class="svg-box">
+      <svg viewBox="0 0 560 {높이}" role="img" aria-label="{변경 후 흐름 한 문장}">
+        <defs><marker id="ah-after" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ah" d="M0,0 L8,4 L0,8 z"/></marker></defs>
+        <rect class="lanebg" x="0" y="8" width="560" height="104" rx="8"/>
+        <text class="lane" x="12" y="26">{모듈 · 흐름 이름}</text>
+        <rect class="n" x="12" y="38" width="150" height="46" rx="6"/><text class="t" x="24" y="58">{진입점}</text><text class="s" x="24" y="74">{한 줄}</text>
+        <rect class="n-mod" x="196" y="38" width="168" height="46" rx="6"/><text class="t" x="208" y="58">{바뀐 처리}</text><text class="s" x="208" y="74">{한 줄}</text>
+        <rect class="n-new n-warn" x="398" y="38" width="150" height="46" rx="6"/><text class="t" x="410" y="58">{새 부품}</text><text class="s" x="410" y="74">{한 줄}</text>
+        <circle class="pin" cx="546" cy="40" r="9"/><text class="pin-t" x="546" y="44" text-anchor="middle">{2-1}</text>
+        <line class="edge" x1="162" y1="61" x2="194" y2="61" marker-end="url(#ah-after)"/>
+        <line class="edge" x1="364" y1="61" x2="396" y2="61" marker-end="url(#ah-after)"/>
+        <text class="el" x="366" y="54">{동사}</text>
+        <text class="warn-t" x="12" y="102">{그림에서 짚을 위험 한 줄}</text>
+      </svg>
+      </div>
+      <figcaption>{변경 후 동작 한두 문장}</figcaption>
+    </figure>
+  </div>
+  <ul class="change-list">
+    <li>{무엇이 바뀌었나 — 동작 · 실패 모양 · 공유 부품}</li>
+  </ul>
+</section>
+
+<!-- 관점 섹션 여섯 — 순서와 제목은 고정. 지적이 없으면 cards 대신 <p class="none">없음 — {무엇을 확인했는지}</p> -->
+<section class="lens" aria-labelledby="l1">
+  <div class="lens-head">
+    <h2 id="l1">1. 설계 · 본문 · 주석 ↔ 구현</h2>
+    <p class="q">설계 문서 · PR 본문 · 주석이 말하는 동작과 숫자가 코드 · 설정과 같은가</p>
+  </div>
+  <div class="cards">
+    <article class="card">
+      <div class="card-top"><span class="id">1-1</span><span class="sev low">낮음</span><h3>{제목 — 결함을 한 문장으로}</h3></div>
+      <div class="loc">{파일:줄 · 문서:줄 · 본문 문장}</div>
+      <dl><dt>무엇이</dt><dd>{어떤 입력 · 상황에서 어떻게 틀리는가}</dd>
+      <dt>확인</dt><dd>{재현 방법 또는 따라간 코드 경로}</dd>
+      <dt>고칠 길</dt><dd>{덜 침습적인 안 포함}</dd></dl>
+    </article>
+  </div>
+</section>
+
+<section class="lens" aria-labelledby="l2">
+  <div class="lens-head"><h2 id="l2">2. 기능 구멍 · 버그</h2>
+  <p class="q">어떤 입력 · 순서 · 실패에서 멈추거나 조용히 틀리는가, 테스트가 그 규칙을 정말 지키는가</p></div>
+  <div class="cards"><!-- 카드 --></div>
+</section>
+
+<section class="lens" aria-labelledby="l3">
+  <div class="lens-head"><h2 id="l3">3. 성능</h2>
+  <p class="q">{이 레포의 실제 규모 — 예: 회원 300만 · 행 450만}일 때 잠금 · 인덱스 · 쿼리 계획 · 메모리 · 타임아웃</p></div>
+  <div class="cards"><!-- 카드 --></div>
+</section>
+
+<section class="lens" aria-labelledby="l4">
+  <div class="lens-head"><h2 id="l4">4. 중복 · 미사용 코드</h2>
+  <p class="q">같은 규칙이 여러 곳에 있거나, 이 변경으로 쓰이지 않게 된 것이 남았는가</p></div>
+  <div class="cards"><!-- 카드 --></div>
+</section>
+
+<section class="lens" aria-labelledby="l5">
+  <div class="lens-head"><h2 id="l5">5. 테스트 빈칸</h2>
+  <p class="q">바뀐 동작마다 정상 · 실패 · 엣지 케이스 테스트가 있는가</p></div>
+  <div class="cards"><!-- 카드 — 동작별로 정상 / 실패 / 엣지 중 빠진 케이스. 예: "bucket 묶음 실패 — 실패 케이스 없음(뮤턴트: 재시도 분기를 지워도 통과)" --></div>
+</section>
+
+<section class="lens" aria-labelledby="l6">
+  <div class="lens-head"><h2 id="l6">6. 더 맞는 패턴</h2>
+  <p class="q">레포의 기존 관용구에 더 맞는 모양이 있는가</p></div>
+  <div class="cards"><!-- 카드 — 확신이 없으면 이 섹션은 "없음" --></div>
+</section>
+
+<section class="lens" aria-labelledby="q-h">
+  <h2 id="q-h">질문 · 결정 필요</h2>
+  <ul class="plain"><li>{코드 밖 사실 · 사람이 정할 것 — 누구에게}</li></ul>
+</section>
+
+<details>
+  <summary>확인했고 문제없음 — 반례를 시도하고도 버틴 것 {n}개</summary>
+  <ul class="plain"><li>{확인한 것 — 무엇으로}</li></ul>
+</details>
+
+<footer>
+  <p>deep-pr-review · {서브에이전트 구성} · {토큰 · 시간}</p>
+  <p>{정리하지 못한 worktree · 컨테이너가 있으면 여기에}</p>
+</footer>
+
+</div>
+</body>
+</html>
