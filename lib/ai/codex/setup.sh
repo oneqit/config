@@ -27,7 +27,8 @@ install_codex() {
 # ───────────────────────────────────────────────────────
 setup_codex_skills() {
   local src_root="$_CODEX_DIR/skills"
-  local dst_root="$HOME/.codex/skills"
+  local dst_root="$HOME/.agents/skills"
+  local legacy_root="$HOME/.codex/skills"
   local src_skill
   local dst_skill
   local skill_name
@@ -38,14 +39,22 @@ setup_codex_skills() {
   local target
 
   src_root="$(cd "$src_root" && pwd)"
-  mkdir -p "$HOME/.codex"
 
-  # Legacy migration: previous versions linked ~/.codex/skills to this repo.
-  # Replace that root symlink with a real directory to preserve Codex .system skills.
-  if [[ -L "$dst_root" ]] && [[ "$(readlink "$dst_root")" == "$src_root" ]]; then
-    warn "기존 Codex Skills 전체 심링크 감지, 개별 스킬 링크 방식으로 전환"
-    mv "$dst_root" "${dst_root}.backup.$(date +%Y%m%d%H%M%S)"
+  # Legacy migration: previous versions linked skills under ~/.codex/skills.
+  # Remove those links so the skills are not loaded twice.
+  if [[ -L "$legacy_root" ]] && [[ "$(readlink "$legacy_root")" == "$src_root" ]]; then
+    warn "기존 Codex Skills 전체 심링크 제거: $legacy_root"
+    rm "$legacy_root"
   fi
+  for dst_skill in "$legacy_root"/*; do
+    [[ -L "$dst_skill" ]] || continue
+    case "$(readlink "$dst_skill")" in
+      "$src_root"/*)
+        warn "기존 경로의 Codex Skills 심링크 제거: $dst_skill"
+        rm "$dst_skill"
+        ;;
+    esac
+  done
 
   mkdir -p "$dst_root"
 
