@@ -36,10 +36,11 @@ export ZSH="$HOME/.oh-my-zsh"
 plugins=(
   git
   zsh-syntax-highlighting
-  zsh-completions
 )
 
 if [[ -d "$ZSH" ]]; then
+  # zsh-completions는 플러그인으로 로드하지 않고 fpath로 추가 (.zcompdump 중복 생성 방지)
+  fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
   source "$ZSH/oh-my-zsh.sh"
 
   # ─── zsh-syntax-highlighting 경로 밑줄 비활성화 ───
