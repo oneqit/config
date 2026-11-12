@@ -83,10 +83,45 @@ install_colima() {
 }
 
 # ───────────────────────────────────────────────────────
-#  Docker Engine 설치 (Linux, apt)
+#  Docker Engine 설치 (Linux, Docker 공식 apt 저장소)
 # ───────────────────────────────────────────────────────
 install_docker_engine() {
-  local packages=(docker.io docker-compose-v2 docker-buildx)
+  local packages=(docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin)
+  # 공식 패키지와 충돌하는 배포판 제공 패키지
+  local conflicts=(docker.io docker-compose docker-compose-v2 docker-doc docker-buildx podman-docker containerd runc)
+  local sources="/etc/apt/sources.list.d/docker.sources"
+  local distro codename
+
+  distro="$(. /etc/os-release && echo "$ID")"
+  codename="$(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")"
+  [[ "$distro" == "ubuntu" || "$distro" == "debian" ]] || error "Docker 공식 apt 저장소는 Ubuntu/Debian만 지원합니다: $distro"
+
+  for pkg_name in "${conflicts[@]}"; do
+    if dpkg-query -W -f='${Status}' "$pkg_name" 2>/dev/null | grep -q 'ok installed'; then
+      info "배포판 제공 패키지 $pkg_name 제거 중..."
+      sudo apt-get remove -y "$pkg_name"
+    fi
+  done
+
+  if [[ -f "$sources" ]]; then
+    success "Docker apt 저장소 이미 등록됨"
+  else
+    info "Docker apt 저장소 등록 중..."
+    sudo apt-get install -y ca-certificates curl
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL "https://download.docker.com/linux/$distro/gpg" -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    sudo tee "$sources" >/dev/null <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/$distro
+Suites: $codename
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+    sudo apt-get update
+    success "Docker apt 저장소 등록 완료"
+  fi
 
   for pkg_name in "${packages[@]}"; do
     if dpkg -s "$pkg_name" &>/dev/null; then
