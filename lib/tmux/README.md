@@ -22,7 +22,9 @@ pkg install tmux
 
 ## 설정 적용
 
-`init.sh` 혹은 `lib/tmux/setup.sh`를 실행하면 `.tmux.conf` 심볼릭 링크와 `.zshrc` 설정이 자동으로 적용된다.
+`init.sh` 혹은 `lib/tmux/setup.sh`를 실행하면 `.tmux.conf`가 `~/.tmux.conf`로 복사된다 (기존 파일과 다르면 백업 후 덮어쓰기). macOS에서는 입력기 상태 표시 데몬도 함께 설치된다.
+
+쉘 함수는 `lib/zsh/.zshrc`가 `lib/tmux/.zshrc.append`를 source하는 방식으로 적용된다. `lib/tmux/setup.sh`만 단독 실행한 경우에는 `.zshrc`에 해당 source 구문이 있는지 직접 확인해야 한다.
 
 ## 쉘 함수 & Alias
 
@@ -53,13 +55,15 @@ tmux 밖에서는 새 세션 생성, tmux 안에서는 현재 창 분할. 인자
 
 ### 원격 세션 함수
 
-`~/.ssh/config`의 `Host remote`로 원격 호스트에 접속해 tmux 세션에 붙는다. 세션이 없으면 명령을 실행하는 세션을 새로 만든다. 원격에도 이 설정(zsh, `t` 함수)이 적용되어 있어야 한다.
+`~/.ssh/config`의 `Host remote`로 원격 호스트에 접속해 이름이 일치하는 tmux 윈도우로 이동한다 (원격 호스트에서 실행하면 ssh 없이 바로 동작). 윈도우가 없으면 기존 세션에 명령을 실행하는 윈도우를 새로 만들고, 세션도 없으면 세션을 새로 만든다. attach로 들어간 경우 명령이 끝나면 클라이언트가 detach된다. 원격에도 이 설정(zsh, `rt` 함수)이 적용되어 있어야 한다.
 
 | 명령어 | 설명 |
 |---|---|
-| `rt <session> '<cmd>'` | 원격 세션 attach (없으면 cmd로 생성). cmd에는 따옴표 금지, `~`는 원격에서 펼쳐지도록 작은따옴표로 전달 |
+| `rt <name> '<cmd>'` | 원격의 `<name>` 윈도우로 이동 (없으면 cmd로 생성). cmd에는 따옴표 금지, `~`는 원격에서 펼쳐지도록 작은따옴표로 전달 |
+| `qseq [claude\|codex]` | 원격 `seqretary-<agent>` 윈도우: 왼쪽 셸 + 오른쪽 에이전트(마지막 세션 이어서). 기본값 `claude` |
+| `qmon` | 원격 `snowball-monitor` 윈도우에서 모니터 봇 실행 |
 
-예: `rt dev 'cd ~/code/project && claude'` — 원격의 `dev` 세션에 붙고, 없으면 `~/code/project`에서 claude를 실행하는 세션 생성
+예: `rt dev 'cd ~/code/project && claude'` — 원격의 `dev` 윈도우로 이동하고, 없으면 `~/code/project`에서 claude를 실행하는 윈도우 생성
 
 `~/.ssh/config` 예 (기기마다 수동 설정):
 
@@ -81,6 +85,7 @@ tmux 내에서 ssh 실행 시 TERM을 `xterm-256color`로 자동 변환 (원격 
 | `Ctrl+a` 또는 `F1` | Prefix 키 (자동 영문 전환) |
 | `Prefix + \|` 또는 `%` | 수평 분할 |
 | `Prefix + -` 또는 `"` | 수직 분할 |
+| `Prefix + _` | 수직 3분할 |
 | `Prefix + h/j/k/l` | 패널 이동 (vi 스타일) |
 | `Prefix + 방향키` | 패널 크기 조절 |
 | `Prefix + <` / `>` | 윈도우를 왼쪽/오른쪽으로 이동 (순서 교체) |
@@ -102,12 +107,12 @@ tmux 내에서 ssh 실행 시 TERM을 `xterm-256color`로 자동 변환 (원격 
 | `C-y` | 위로 스크롤 |
 | `ESC` | 선택 해제 (더블: copy-mode 종료) |
 
-### 마우스 동작 (copy-mode)
+### 마우스 동작
 
 | 동작 | 설명 |
 |---|---|
-| 더블클릭 | 공백 기준 단어 선택 (경로, 브랜치명, URL 전체 선택) |
-| 드래그 | 선택만 유지 (자동 복사 안 됨, Enter/y로 복사) |
+| 더블클릭 | 공백 기준 단어 선택 (경로, 브랜치명, URL 전체 선택) 후 복사하고 copy-mode 종료 |
+| 드래그 | 놓는 순간 복사하고 copy-mode 종료 (tmux 기본 동작) |
 
 ## 입력기 상태 표시 및 자동 전환 (macOS 전용)
 
