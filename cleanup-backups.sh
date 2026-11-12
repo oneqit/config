@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/lib/logging.sh"
 
 # init.sh가 생성하는 백업 파일의 정확한 경로 패턴
 BACKUP_PATTERNS=(
-  "$HOME/Library/KeyBindings/DefaultkeyBinding.dict.backup."*
+  "$HOME/Library/KeyBindings/DefaultKeyBinding.dict.backup."*
   "$HOME/.config/starship.toml.backup."*
   "$HOME/.tmux.conf.backup."*
   "$HOME/.zshrc.backup."*

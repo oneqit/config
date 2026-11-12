@@ -126,7 +126,7 @@ setup_macos_defaults() {
 #  한영 키보드 백틱(`) 입력 설정
 # ───────────────────────────────────────────────────────
 setup_keybinding() {
-  deploy_config "백틱 설정" "$KEYBINDING_DIR/DefaultkeyBinding.dict" "$HOME/Library/KeyBindings/DefaultkeyBinding.dict"
+  deploy_config "백틱 설정" "$KEYBINDING_DIR/DefaultKeyBinding.dict" "$HOME/Library/KeyBindings/DefaultKeyBinding.dict"
 }
 
 # ───────────────────────────────────────────────────────
@@ -212,7 +212,7 @@ main() {
   echo -e "    폰트     → CaskaydiaMono Nerd Font, Noto Sans Mono CJK KR"
   echo -e "    앱       → Rectangle"
   echo -e "    마우스   → LinearMouse (마우스만 수평/수직 스크롤 반전)"
-  echo -e "    런타임   → mise (rust, python, uv, java, maven, kotlin, node, go)"
+  echo -e "    런타임   → mise (rust, uv, java, maven, kotlin, node, go)"
   echo -e "    CLI 도구 → git-flow-next, neovim, tmux, ripgrep, btop, lazygit, lazydocker, k9s"
   echo -e "    컨테이너 → Docker CLI, Docker Compose, Colima"
   echo -e "    AI CLI   → Claude Code, Codex CLI (전역 지시사항 포함)"
