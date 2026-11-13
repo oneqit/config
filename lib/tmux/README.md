@@ -86,7 +86,7 @@ tmux 내에서 ssh 실행 시 TERM을 `xterm-256color`로 자동 변환 (원격 
 | `Prefix + \|` 또는 `%` | 수평 분할 |
 | `Prefix + -` 또는 `"` | 수직 분할 |
 | `Prefix + _` | 수직 3분할 |
-| `Prefix + F` | 현재 패널의 Claude Code 세션을 fork해 아래 패널에서 resume (`tmux-claude-fork`) |
+| `Prefix + F` | 현재 패널의 Claude Code / Codex 세션을 fork해 아래 패널에서 resume (`tmux-agent-fork`, Codex는 같은 디렉터리의 최근 세션) |
 | `Prefix + h/j/k/l` | 패널 이동 (vi 스타일) |
 | `Prefix + 방향키` | 패널 크기 조절 |
 | `Prefix + <` / `>` | 윈도우를 왼쪽/오른쪽으로 이동 (순서 교체) |

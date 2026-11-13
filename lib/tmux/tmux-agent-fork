@@ -1,13 +1,23 @@
 #!/bin/sh
-# Fork the Claude Code session running in a tmux pane into a new pane below it.
-# Usage: tmux-claude-fork <pane_id> <pane_current_path>
+# Fork the Claude Code or Codex session running in a tmux pane into a new pane below it.
+# Usage: tmux-agent-fork <pane_id> <pane_current_path> <pane_current_command>
 #
 # Claude Code records each running session in ~/.claude/sessions/<pid>.json,
 # including the tmux pane it runs in ("tmux":"<session>:@<window>.%<pane>").
 # Falls back to the most recent session in the directory when none matches.
+#
+# Codex records no pane-to-session mapping, so it forks the most recent
+# session in the directory.
 
 pane="$1"
 dir="$2"
+current="$3"
+
+if [ "$current" = codex ]; then
+  tmux split-window -v -t "$pane" -c "$dir" "codex fork --last --dangerously-bypass-approvals-and-sandbox"
+  exit
+fi
+
 cmd='claude --allow-dangerously-skip-permissions'
 sid=''
 cwd=''
