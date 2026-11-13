@@ -9,6 +9,8 @@ source "$_TMUX_DIR/../platform.sh"
 # ───────────────────────────────────────────────────────
 setup_tmux() {
   deploy_config "tmux 설정" "$_TMUX_DIR/.tmux.conf" "$HOME/.tmux.conf"
+  deploy_config "tmux-claude-fork" "$_TMUX_DIR/tmux-claude-fork" "$HOME/.local/bin/tmux-claude-fork"
+  chmod +x "$HOME/.local/bin/tmux-claude-fork"
 }
 
 # ───────────────────────────────────────────────────────

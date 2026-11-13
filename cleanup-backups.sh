@@ -14,6 +14,7 @@ BACKUP_PATTERNS=(
   "$HOME/Library/KeyBindings/DefaultKeyBinding.dict.backup."*
   "$HOME/.config/starship.toml.backup."*
   "$HOME/.tmux.conf.backup."*
+  "$HOME/.local/bin/tmux-claude-fork.backup."*
   "$HOME/.zshrc.backup."*
   "$HOME/.config/ghostty/config.backup."*
   "$HOME/Library/Application Support/com.mitchellh.ghostty/config.backup."*

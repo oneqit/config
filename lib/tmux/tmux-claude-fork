@@ -1,0 +1,28 @@
+#!/bin/sh
+# Fork the Claude Code session running in a tmux pane into a new pane below it.
+# Usage: tmux-claude-fork <pane_id> <pane_current_path>
+#
+# Claude Code records each running session in ~/.claude/sessions/<pid>.json,
+# including the tmux pane it runs in ("tmux":"<session>:@<window>.%<pane>").
+# Falls back to the most recent session in the directory when none matches.
+
+pane="$1"
+dir="$2"
+cmd='claude --allow-dangerously-skip-permissions'
+sid=''
+cwd=''
+
+for f in "$HOME"/.claude/sessions/*.json; do
+  [ -f "$f" ] || continue
+  grep -q "\"tmux\":\"[^\"]*\\.$pane\"" "$f" || continue
+  kill -0 "$(basename "$f" .json)" 2>/dev/null || continue
+  sid=$(sed -n 's/.*"sessionId":"\([^"]*\)".*/\1/p' "$f")
+  cwd=$(sed -n 's/.*"cwd":"\([^"]*\)".*/\1/p' "$f")
+  break
+done
+
+if [ -n "$sid" ]; then
+  tmux split-window -v -t "$pane" -c "${cwd:-$dir}" "$cmd --resume $sid --fork-session"
+else
+  tmux split-window -v -t "$pane" -c "$dir" "$cmd --continue --fork-session"
+fi
