@@ -1,9 +1,5 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PR #{번호} 리뷰</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
@@ -36,7 +32,7 @@
   --low: #a9b2c0; --low-soft: #232933; --opt: #8b93a1; --dec: #b9a0ff; --dec-soft: #2a2145;
   color-scheme: dark }
 
-body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.65; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.65; }
 .wrap { max-width: 1180px; margin: 0 auto; padding-block: 32px 64px;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid; gap: 40px; }
@@ -134,11 +130,9 @@ tr:last-child td { border-bottom: 0; }
 .hit.y { color: var(--new); } .hit.p { color: var(--mid); } .hit.n { color: var(--muted); }
 footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
 </style>
-</head>
-<body>
 
 <!--
-  deep-pr-review 결과 페이지 템플릿.
+  pr-review 결과 페이지 템플릿.
   - {중괄호} 자리를 채우고, 예시 카드 · 예시 SVG 칸은 지우거나 바꾼다. 주석은 지운다.
   - 스타일 · 토큰은 그대로 쓴다(라이트/다크 둘 다 정의됨).
   - 심각도 칩: sev high(높음) · mid(중간) · low(낮음) · opt(선택) · dec(결정 필요)
@@ -222,6 +216,16 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
   <ul class="change-list">
     <li>{무엇이 바뀌었나 — 동작 · 실패 모양 · 공유 부품}</li>
   </ul>
+  <!-- 영향받는 API — 바뀐 코드를 거치는 API 를 한 줄씩. 없으면 table-box 대신 <p class="none">없음 — {무엇을 확인했는지}</p> -->
+  <h3>영향받는 API</h3>
+  <div class="table-box">
+    <table>
+      <thead><tr><th>API</th><th>거치는 바뀐 칸</th><th>호출자에게 달라지는 것</th><th>지적</th></tr></thead>
+      <tbody>
+        <tr><td><code>{메서드 경로 · 토픽}</code></td><td>{그림의 칸 이름}</td><td>{요청 · 응답 모양 · 상태 코드 · 동작 · 지연 — 그대로면 "달라지는 것 없음"}</td><td class="mono">{2-1 또는 —}</td></tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <!-- 관점 섹션 여섯 — 순서와 제목은 고정. 지적이 없으면 cards 대신 <p class="none">없음 — {무엇을 확인했는지}</p> -->
@@ -282,10 +286,8 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
 </details>
 
 <footer>
-  <p>deep-pr-review · {서브에이전트 구성} · {토큰 · 시간}</p>
+  <p>pr-review · {서브에이전트 구성} · {토큰 · 시간}</p>
   <p>{정리하지 못한 worktree · 컨테이너가 있으면 여기에}</p>
 </footer>
 
 </div>
-</body>
-</html>
