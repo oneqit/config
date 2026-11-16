@@ -228,7 +228,8 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
   </div>
 </section>
 
-<!-- 관점 섹션 여섯 — 순서와 제목은 고정. 지적이 없으면 cards 대신 <p class="none">없음 — {무엇을 확인했는지}</p> -->
+<!-- 관점 섹션 여섯 — 순서와 제목은 고정. 지적이 없으면 cards 대신 <p class="none">없음 — {무엇을 확인했는지}</p>.
+     관점 1 · 4 · 5 · 6 의 기록 칸(details)은 지적이 없어도 채운다 — 절차에서 본 것을 한 줄씩 -->
 <section class="lens" aria-labelledby="l1">
   <div class="lens-head">
     <h2 id="l1">1. 설계 · 본문 · 주석 ↔ 구현</h2>
@@ -243,11 +244,18 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
       <dt>고칠 길</dt><dd>{덜 침습적인 안 포함}</dd></dl>
     </article>
   </div>
+  <details>
+    <summary>기록 — 맞춰 본 주장 {n}개</summary>
+    <div class="table-box"><table>
+      <thead><tr><th>주장</th><th>출처</th><th>맞춰 본 코드 · 반례</th><th>결과</th></tr></thead>
+      <tbody><tr><td>{문서 · 본문 · 주석이 말한 것}</td><td>{문서:줄 · 본문}</td><td>{파일:줄 · 검색한 이름 · 대 본 반례}</td><td>{맞음 · 다름(1-1)}</td></tr></tbody>
+    </table></div>
+  </details>
 </section>
 
 <section class="lens" aria-labelledby="l2">
   <div class="lens-head"><h2 id="l2">2. 기능 구멍 · 버그</h2>
-  <p class="q">어떤 입력 · 순서 · 실패에서 멈추거나 조용히 틀리는가, 테스트가 그 규칙을 정말 지키는가</p></div>
+  <p class="q">어떤 입력 · 순서 · 실패에서 멈추거나 조용히 틀리는가</p></div>
   <div class="cards"><!-- 카드 --></div>
 </section>
 
@@ -259,20 +267,41 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
 
 <section class="lens" aria-labelledby="l4">
   <div class="lens-head"><h2 id="l4">4. 중복 · 미사용 코드</h2>
-  <p class="q">같은 규칙이 여러 곳에 있거나, 이 변경으로 쓰이지 않게 된 것이 남았는가</p></div>
+  <p class="q">같은 규칙이 여러 곳에 있거나, 이 변경으로 쓰이지 않게 된 것이 남았는가, 새로 더한 것이 레포에 이미 있는가</p></div>
   <div class="cards"><!-- 카드 --></div>
+  <details>
+    <summary>기록 — 새로 더한 것 {n}개의 중복 검색</summary>
+    <div class="table-box"><table>
+      <thead><tr><th>새로 더한 것</th><th>검색한 말</th><th>겹치는 것</th></tr></thead>
+      <tbody><tr><td>{함수 · 테스트 헬퍼 · 반복된 설명}</td><td>{이름 · 하는 일}</td><td>{파일:줄(4-1) · 없음}</td></tr></tbody>
+    </table></div>
+  </details>
 </section>
 
 <section class="lens" aria-labelledby="l5">
   <div class="lens-head"><h2 id="l5">5. 테스트 빈칸</h2>
   <p class="q">바뀐 동작마다 정상 · 실패 · 엣지 케이스 테스트가 있는가, 있는 테스트는 규칙이 깨지면 실패하는가</p></div>
   <div class="cards"><!-- 카드 — 동작별로 정상 / 실패 / 엣지 중 빠진 케이스. 예: "bucket 묶음 실패 — 실패 케이스 없음(뮤턴트: 재시도 분기를 지워도 통과)" --></div>
+  <details>
+    <summary>기록 — 테스트 {n}개의 뮤턴트</summary>
+    <div class="table-box"><table>
+      <thead><tr><th>테스트</th><th>뮤턴트</th><th>방법</th><th>결과</th></tr></thead>
+      <tbody><tr><td>{테스트 이름}</td><td>{되돌린 줄 — 파일:줄}</td><td>{실행 · 읽기}</td><td>{실패함(지킴) · 통과함(5-1)}</td></tr></tbody>
+    </table></div>
+  </details>
 </section>
 
 <section class="lens" aria-labelledby="l6">
   <div class="lens-head"><h2 id="l6">6. 더 맞는 패턴</h2>
-  <p class="q">레포의 기존 관용구에 더 맞는 모양이 있는가</p></div>
+  <p class="q">레포의 기존 관용구에 더 맞는 모양이 있는가, 형제가 다 하는데 새 코드에만 없는 것이 있는가</p></div>
   <div class="cards"><!-- 카드 — 확신이 없으면 이 섹션은 "없음" --></div>
+  <details>
+    <summary>기록 — 형제 코드 {n}곳</summary>
+    <div class="table-box"><table>
+      <thead><tr><th>형제</th><th>공통으로 하는 것</th><th>새 코드</th></tr></thead>
+      <tbody><tr><td>{읽은 형제 파일 둘 이상}</td><td>{로그 · 공용 헬퍼 · 단언 방식 …}</td><td>{있음 · 없음(6-1) · 없는 이유가 적혀 있음 — 어디}</td></tr></tbody>
+    </table></div>
+  </details>
 </section>
 
 <section class="lens" aria-labelledby="q-h">
