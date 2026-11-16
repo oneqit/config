@@ -1,64 +1,82 @@
-# Agent Instructions
+# 에이전트 지시사항
 
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+LLM 이 코딩할 때 자주 하는 실수를 줄이기 위한 행동 지침. 프로젝트별 지시사항이 있으면 함께 적용한다.
 
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+**절충:** 이 지침은 속도보다 신중함에 무게를 둔다. 사소한 작업에는 판단껏 적용한다.
 
-## 1. Think Before Coding
+## 1. 코딩 전에 생각하기
 
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+**가정하지 않는다. 혼란을 숨기지 않는다. 절충점을 드러낸다.**
 
-Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+구현하기 전에:
+- 가정을 명시적으로 밝힌다. 확실하지 않으면 묻는다.
+- 해석이 여러 가지면 모두 제시한다 - 말없이 하나를 고르지 않는다.
+- 더 단순한 방법이 있으면 말한다. 필요하면 반대 의견을 낸다.
+- 불분명한 것이 있으면 멈춘다. 무엇이 헷갈리는지 짚고 묻는다.
 
-## 2. Simplicity First
+## 2. 단순함 우선
 
-**Minimum code that solves the problem. Nothing speculative.**
+**문제를 푸는 최소한의 코드. 추측으로 넣는 것은 없다.**
 
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
+- 요청받지 않은 기능을 넣지 않는다.
+- 한 번만 쓰는 코드에 추상화를 만들지 않는다.
+- 요청받지 않은 "유연성" · "설정 가능성"을 넣지 않는다.
+- 일어날 수 없는 상황의 에러 처리를 넣지 않는다.
+- 200줄로 썼는데 50줄로 될 것 같으면 다시 쓴다.
 
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+스스로 묻는다: "시니어 엔지니어가 보면 과하게 복잡하다고 할까?" 그렇다면 단순하게 고친다.
 
-## 3. Surgical Changes
+## 3. 필요한 곳만 수정
 
-**Touch only what you must. Clean up only your own mess.**
+**꼭 고쳐야 하는 것만 건드린다. 자기가 만든 것만 치운다.**
 
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
+기존 코드를 고칠 때:
+- 주변 코드 · 주석 · 포맷을 "개선"하지 않는다.
+- 고장 나지 않은 것을 리팩토링하지 않는다.
+- 내 방식과 달라도 기존 스타일을 따른다.
+- 관련 없는 죽은 코드를 발견하면 알리기만 한다 - 지우지 않는다.
 
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
+내 변경으로 쓰이지 않게 된 것이 생기면:
+- 내 변경 때문에 안 쓰이게 된 import · 변수 · 함수는 지운다.
+- 원래 있던 죽은 코드는 요청이 없으면 지우지 않는다.
 
-The test: Every changed line should trace directly to the user's request.
+기준: 바뀐 줄 하나하나가 사용자의 요청으로 곧바로 이어져야 한다.
 
-## 4. Goal-Driven Execution
+## 4. 목표 중심 실행
 
-**Define success criteria. Loop until verified.**
+**성공 기준을 정한다. 검증될 때까지 반복한다.**
 
-Transform tasks into verifiable goals:
-- "Add validation" -> "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" -> "Write a test that reproduces it, then make it pass"
-- "Refactor X" -> "Ensure tests pass before and after"
+작업을 검증할 수 있는 목표로 바꾼다:
+- "검증 추가" -> "잘못된 입력에 대한 테스트를 쓰고 통과시킨다"
+- "버그 수정" -> "버그를 재현하는 테스트를 쓰고 통과시킨다"
+- "X 리팩토링" -> "전후로 테스트가 통과하는지 확인한다"
 
-For multi-step tasks, state a brief plan:
+여러 단계의 작업이면 간단한 계획을 밝힌다:
 
-  1. [Step] -> verify: [check]
-  2. [Step] -> verify: [check]
-  3. [Step] -> verify: [check]
+  1. [단계] -> 검증: [확인 방법]
+  2. [단계] -> 검증: [확인 방법]
+  3. [단계] -> 검증: [확인 방법]
 
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+성공 기준이 분명하면 혼자서 반복할 수 있다. 기준이 모호하면("되게 해 줘") 계속 되물어야 한다.
+
+## 5. 있는 것을 먼저 찾는다
+
+**새로 만들기 전에 찾는다. 있으면 그것을 쓴다.**
+
+- 작업 전에 프로젝트의 규약 · 컨벤션 문서와 같은 종류의 기존 코드를 읽고 그 방식을 따른다.
+- 함수 · 헬퍼 · 상수 · 테스트 도구를 새로 쓰기 전에 같은 일을 하는 것이 있는지 검색한다. 있으면 그것을 쓴다.
+- 비슷하지만 딱 맞지 않으면 하나 더 만들지 않는다. 기존 것을 고쳐 쓸지 따로 둘지 묻는다.
+- 다른 브랜치를 머지해 온 뒤에는 그 사이 생긴 공용 코드를 다시 찾는다.
+
+## 6. 주석 · 문서는 필요한 자리에만
+
+**이유는 한 곳에만. 나머지는 결과만.**
+
+- 바꾼 이유는 커밋 메시지 · PR 본문에 적는다. 코드 주석 · API 설명 · 문서에는 결과만 남긴다.
+- 주석을 쓰기 전에 묻는다: "이 줄을 지우면 다음 사람이 무엇을 틀리게 고치는가?" 답이 없으면 쓰지 않는다.
+- 같은 설명은 한 곳에만 둔다. 다른 곳은 결과 한 줄이나 참조로 끝낸다.
+- 작업을 마치기 전에 diff 에서 내가 더한 주석 · 문서 줄만 다시 읽고, 위 기준에 안 맞으면 지운다.
 
 ---
 
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+**이 지침이 잘 작동하고 있다면:** diff 에 불필요한 변경이 줄고, 과한 복잡함 때문에 다시 쓰는 일이 줄고, 확인 질문이 실수한 뒤가 아니라 구현 전에 나온다.
