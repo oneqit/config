@@ -172,6 +172,19 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
   </div>
 </div>
 
+<section class="flow" aria-labelledby="api-h">
+  <!-- 영향받는 API — 바뀐 코드를 거치는 API 를 한 줄씩. 없으면 table-box 대신 <p class="none">없음 — {무엇을 확인했는지}</p> -->
+  <h2 id="api-h">영향받는 API</h2>
+  <div class="table-box">
+    <table>
+      <thead><tr><th>API</th><th>거치는 바뀐 칸</th><th>호출자에게 달라지는 것</th><th>지적</th></tr></thead>
+      <tbody>
+        <tr><td><code>{메서드 경로 · 토픽}</code></td><td>{그림의 칸 이름}</td><td>{요청 · 응답 모양 · 상태 코드 · 동작 · 지연 — 그대로면 "달라지는 것 없음"}</td><td class="mono">{2-1 또는 —}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
 <section class="flow" aria-labelledby="flow-h">
   <h2 id="flow-h">코드가 하는 일 — before / after</h2>
   <div class="legend">
@@ -222,16 +235,6 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
   <ul class="change-list">
     <li>{무엇이 바뀌었나 — 동작 · 실패 모양 · 공유 부품}</li>
   </ul>
-  <!-- 영향받는 API — 바뀐 코드를 거치는 API 를 한 줄씩. 없으면 table-box 대신 <p class="none">없음 — {무엇을 확인했는지}</p> -->
-  <h3>영향받는 API</h3>
-  <div class="table-box">
-    <table>
-      <thead><tr><th>API</th><th>거치는 바뀐 칸</th><th>호출자에게 달라지는 것</th><th>지적</th></tr></thead>
-      <tbody>
-        <tr><td><code>{메서드 경로 · 토픽}</code></td><td>{그림의 칸 이름}</td><td>{요청 · 응답 모양 · 상태 코드 · 동작 · 지연 — 그대로면 "달라지는 것 없음"}</td><td class="mono">{2-1 또는 —}</td></tr>
-      </tbody>
-    </table>
-  </div>
 </section>
 
 <!-- 관점 섹션 여섯 — 순서와 제목은 고정. 지적이 없으면 cards 대신 <p class="none">없음 — {무엇을 확인했는지}</p>.
