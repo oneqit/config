@@ -232,7 +232,7 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
 </section>
 
 <!-- 관점 섹션 여섯 — 순서와 제목은 고정. 지적이 없으면 cards 대신 <p class="none">없음 — {무엇을 확인했는지}</p>.
-     관점 1 · 4 · 5 · 6 의 기록 칸(details)은 지적이 없어도 채운다 — 절차에서 본 것을 한 줄씩 -->
+     관점 1 · 2 · 4 · 5 · 6 의 기록 칸(details)은 지적이 없어도 채운다 — 절차에서 본 것을 한 줄씩 -->
 <section class="lens" aria-labelledby="l1">
   <div class="lens-head">
     <h2 id="l1">1. 설계 · 본문 · 주석 ↔ 구현</h2>
@@ -260,6 +260,13 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
   <div class="lens-head"><h2 id="l2">2. 기능 구멍 · 버그</h2>
   <p class="q">어떤 입력 · 순서 · 실패에서 멈추거나 조용히 틀리는가</p></div>
   <div class="cards"><!-- 카드 --></div>
+  <details>
+    <summary>기록 — 여닫는 짝 {n}개</summary>
+    <div class="table-box"><table>
+      <thead><tr><th>여는 곳</th><th>닫는 곳</th><th>기대는 약속</th><th>깨 본 반례</th><th>결과</th></tr></thead>
+      <tbody><tr><td>{파일:줄 — MDC · 잠금 · 트랜잭션 · 등록}</td><td>{파일:줄 · 같은 곳}</td><td>{필터 순서 · 빈 등록 · 같은 조건식 · 없음}</td><td>{순서 바꿈 · 빈 뺌 · 다른 경로 · 조기 return}</td><td>{닫힘 · 샘(2-1)}</td></tr></tbody>
+    </table></div>
+  </details>
 </section>
 
 <section class="lens" aria-labelledby="l3">
@@ -276,7 +283,7 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
     <summary>기록 — 새로 더한 것 {n}개의 중복 검색</summary>
     <div class="table-box"><table>
       <thead><tr><th>새로 더한 것</th><th>검색한 말</th><th>겹치는 것</th></tr></thead>
-      <tbody><tr><td>{함수 · 테스트 헬퍼 · 반복된 설명}</td><td>{이름 · 하는 일}</td><td>{파일:줄(4-1) · 없음}</td></tr></tbody>
+      <tbody><tr><td>{함수 · 테스트 헬퍼 · 반복된 설명 · 손으로 맞춘 목록}</td><td>{이름 · 하는 일 · 목록의 항목}</td><td>{파일:줄(4-1) · 항목이 어긋난 곳 · 없음}</td></tr></tbody>
     </table></div>
   </details>
 </section>
