@@ -309,14 +309,14 @@ footer { color: var(--muted); font-size: 0.84rem; display: grid; gap: 4px; }
 </section>
 
 <section class="lens" aria-labelledby="l6">
-  <div class="lens-head"><h2 id="l6">6. 더 맞는 패턴</h2>
-  <p class="q">레포의 기존 관용구에 더 맞는 모양이 있는가, 형제가 다 하는데 새 코드에만 없는 것이 있는가</p></div>
+  <div class="lens-head"><h2 id="l6">6. 설계 · 패턴</h2>
+  <p class="q">로직이 맞는 층 · 모듈에 있는가, before 가 지키던 보장을 잃었는가, 처음부터 짰다면 다른 모양이었을까, 형제가 다 하는데 새 코드에만 없는 것이 있는가</p></div>
   <div class="cards"><!-- 카드 — 확신이 없으면 이 섹션은 "없음" --></div>
   <details>
-    <summary>기록 — 형제 코드 {n}곳</summary>
+    <summary>기록 — 비교한 곳 {n}곳</summary>
     <div class="table-box"><table>
-      <thead><tr><th>형제</th><th>공통으로 하는 것</th><th>새 코드</th></tr></thead>
-      <tbody><tr><td>{읽은 형제 파일 둘 이상}</td><td>{로그 · 공용 헬퍼 · 단언 방식 …}</td><td>{있음 · 없음(6-1) · 없는 이유가 적혀 있음 — 어디}</td></tr></tbody>
+      <thead><tr><th>비교 대상</th><th>대상이 하는 것 · 지키는 것</th><th>새 코드</th></tr></thead>
+      <tbody><tr><td>{형제 파일 둘 이상 · before 시그니처 · 그 모듈을 쓰는 앱}</td><td>{로그 · 공용 헬퍼 · 단언 방식 · 좁은 타입 …}</td><td>{있음 · 없음(6-1) · 없는 이유가 적혀 있음 — 어디}</td></tr></tbody>
     </table></div>
   </details>
 </section>
